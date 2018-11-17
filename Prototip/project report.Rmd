@@ -1,0 +1,34 @@
+---
+title: "Time series I: EDA"
+author:
+- name: Radu Ioan-Alexandru (Gr 405)
+- name: Stefan Eva (Gr Scrieti grupa pe linia 5 in project report)
+date: "`r format(Sys.time(), '%d %B %Y')`"
+output: 
+  html_document:
+    highlight: pygments
+---
+
+```{r setup, include = FALSE}
+knitr::opts_chunk$set(include = TRUE, echo = TRUE)
+```
+
+## 1. Defining a **ts** object 
+### a) using the **ts** function 
+
+```{r}
+y <- ts(c(123,39,78,52,110), start=2012)
+y
+```
+
+#### If you have annual data, with one observation per year, you only need to provide the starting year (or the ending year).
+
+#### For observations that are more frequent than once per year, you simply add a **frequency** argument. For example, if your monthly data is already stored as a numerical vector **z**, then it can be converted to a **ts** object like this:
+
+```{r}
+z <- c(123,39,78,52,110)
+y <- ts(z, start=2003, frequency=12)
+y
+```
+
+## 2. Time plots
