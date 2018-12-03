@@ -37,7 +37,7 @@ y
 
 
 
-#### For time series data, the obvious graph to start with is a time plot. That is, the observations are plotted against the time of observation, with consecutive observations joined by straight lines. Figure 2.1 below shows the weekly economy passenger load on Ansett Airlines between Australia�s two largest cities.
+#### For time series data, the obvious graph to start with is a time plot. That is, the observations are plotted against the time of observation, with consecutive observations joined by straight lines. Figure 2.1 below shows the weekly economy passenger load on Ansett Airlines between Australia’s two largest cities.
 
 ```{r}
 library(ggplot2)
@@ -73,7 +73,7 @@ autoplot(a10) +
 ### **3.1 Trend:**
 
 
-#### A trend exists when there is a long-term increase or decrease in the data. It does not have to be linear. Sometimes we will refer to a trend as �changing direction�, when it might go from an increasing trend to a decreasing trend. There is a trend in the antidiabetic drug sales data shown in Figure 2.2.
+#### A trend exists when there is a long-term increase or decrease in the data. It does not have to be linear. Sometimes we will refer to a trend as “changing direction”, when it might go from an increasing trend to a decreasing trend. There is a trend in the antidiabetic drug sales data shown in Figure 2.2.
 
 
 ### **3.2 Seasonal:**
@@ -85,14 +85,14 @@ autoplot(a10) +
 ### **3.3 Cyclic:**
 
 
-#### A cycle occurs when the data exhibit rises and falls that are not of a fixed frequency. These fluctuations are usually due to economic conditions, and are often related to the �business cycle�. The duration of these fluctuations is usually at least 2 years.
+#### A cycle occurs when the data exhibit rises and falls that are not of a fixed frequency. These fluctuations are usually due to economic conditions, and are often related to the “business cycle”. The duration of these fluctuations is usually at least 2 years.
 
 
 <center>
 ![](C:\Users\Eva\Documents\GitHub\ProiectDataMining\Prototip\Figure2.3.png)
 </center>
 
-#### 1.The monthly housing sales (top left) show strong seasonality within each year, as well as some strong cyclic behaviour with a period of about 6�10 years. There is no apparent trend in the data over this period.
+#### 1.The monthly housing sales (top left) show strong seasonality within each year, as well as some strong cyclic behaviour with a period of about 6–10 years. There is no apparent trend in the data over this period.
 #### 2.The US treasury bill contracts (top right) show results from the Chicago market for 100 consecutive trading days in 1981. Here there is no seasonality, but an obvious downward trend. Possibly, if we had a much longer series, we would see that this downward trend is actually part of a long cycle, but when viewed over only 100 days it appears to be a trend.
 #### 3.The Australian quarterly electricity production (bottom left) shows a strong increasing trend, with strong seasonality. There is no evidence of any cyclic behaviour here.
 #### 4.The daily change in the Google closing stock price (bottom right) has no trend, seasonality or cyclic behaviour. There are random fluctuations which do not appear to be very predictable, and no strong patterns that would help with developing a forecasting model.
@@ -103,7 +103,7 @@ autoplot(a10) +
 
 
 
-#### A seasonal plot is similar to a time plot except that the data are plotted against the individual �seasons� in which the data were observed. An example is given below showing the antidiabetic drug sales.
+#### A seasonal plot is similar to a time plot except that the data are plotted against the individual “seasons” in which the data were observed. An example is given below showing the antidiabetic drug sales.
 
 
 ``` {r}
@@ -178,7 +178,7 @@ qplot(Temperature, Demand, data=as.data.frame(elecdemand)) +
 <center>
 
 
-#### The value of **r** always lies between **-1** and **1** with negative values indicating a negative relationship and positive values indicating a positive relationship. The following graphs show examples of data sets with varying levels of correlation.
+#### The value of **r** always lies between **−1** and **1** with negative values indicating a negative relationship and positive values indicating a positive relationship. The following graphs show examples of data sets with varying levels of correlation.
 
 
 <center>
@@ -225,7 +225,7 @@ GGally::ggpairs(as.data.frame(visnights[,1:5]))
 
 
 
-#### The next figure displays scatterplots of quarterly Australian beer production, where the horizontal axis shows lagged values of the time series. Each graph shows **yt** plotted against **yt-k** for different values of k.
+#### The next figure displays scatterplots of quarterly Australian beer production, where the horizontal axis shows lagged values of the time series. Each graph shows **yt** plotted against **yt−k** for different values of k.
 
 
 ```{r}
@@ -236,3 +236,85 @@ gglagplot(beer2)
 
 #### Here the colours indicate the quarter of the variable on the vertical axis. The lines connect points in chronological order. The relationship is strongly positive at lags 4 and 8, reflecting the strong seasonality in the data. The negative relationship seen for lags 2 and 6 occurs because peaks (in Q4) are plotted against troughs (in Q2).
 #### The window() function used here is very useful when extracting a portion of a time series. In this case, we have extracted the data from **ausbeer**, beginning in 1992.
+
+
+
+## 8.Autocorellation
+
+
+#### Autocorrelation measures the linear relationship between lagged values of a time series. The value of rk can be written as:
+
+
+<center>
+![](C:\Users\Eva\Documents\GitHub\ProiectDataMining\Prototip\Autocorellation1.png)
+<center>
+
+
+#### The first nine autocorrelation coefficients for the beer production data are given in the following table.
+
+
+<center>
+![](C:\Users\Eva\Documents\GitHub\ProiectDataMining\Prototip\Autocorellation2.png)
+<center>
+
+
+#### These correspond to the nine scatterplots, also known as a correlogram.
+
+```{r}
+ggAcf(beer2)
+```
+
+
+#### **r4** is higher than for the other lags. This is due to the seasonal pattern in the data: the peaks tend to be four quarters apart and the troughs tend to be four quarters apart.
+#### **r2** is more negative than for the other lags because troughs tend to be two quarters behind peaks.
+#### The dashed blue lines indicate whether the correlations are significantly different from zero.
+
+
+### **6.Trend and seasonality in ACF plots**
+
+
+#### When data have a trend, the autocorrelations for small lags tend to be large and positive because observations nearby in time are also nearby in size. So the ACF of trended time series tend to have positive values that slowly decrease as the lags increase.
+#### When data are seasonal, the autocorrelations will be larger for the seasonal lags (at multiples of the seasonal frequency) than for other lags.
+#### When data are both trended and seasonal, you see a combination of these effects. The monthly Australian electricity demand series plotted next shows both trend and seasonality
+
+
+```{r}
+aelec <- window(elec, start=1980)
+autoplot(aelec) + xlab("Year") + ylab("GWh")
+```
+
+#### Its ACF is shown as:
+
+```{r}
+ggAcf(aelec, lag=48)
+```
+
+
+#### The slow decrease in the ACF as the lags increase is due to the trend, while the “scalloped” shape is due the seasonality.
+
+
+
+## 9.White noise
+
+
+
+#### Time series that show no autocorrelation are called white noise. The next figure illustrates an example of white noise.
+
+
+```{r}
+set.seed(30)
+y <- ts(rnorm(50))
+autoplot(y) + ggtitle("White noise")
+```
+
+
+#### For white noise series, we expect each autocorrelation to be close to zero. Of course, they will not be exactly equal to zero as there is some random variation. For a white noise series, we expect 95% of the spikes in the ACF to lie within ±2/√T where T is the length of the time series.
+ 
+#### In this example, T=50 and so the bounds are at ±2/√50=±0.28.All of the autocorrelation coefficients lie within these limits, confirming that the data are white noise.
+
+
+```{r}
+ggAcf(y)
+```
+
+
