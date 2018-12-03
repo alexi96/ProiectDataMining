@@ -39,7 +39,7 @@ y
 
 ```{r}
 z <- c(123,39,78,52,110)
-y <- ts(z, start=2003, frequency=12)
+y <- ts(z, start=2003, frequency=12) # the default frequency = 1
 y
 ```
 
