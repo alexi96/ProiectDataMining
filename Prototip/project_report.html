@@ -149,15 +149,32 @@ $(document).ready(function () {
 <h1 class="title toc-ignore">Time series I: EDA</h1>
 <h4 class="author"><em>Radu Ioan-Alexandru (Gr 405)</em></h4>
 <h4 class="author"><em>Stefan Eva (Gr Scrieti grupa pe linia 5 in project report)</em></h4>
-<h4 class="date"><em>12 noiembrie 2018</em></h4>
+<h4 class="date"><em>23 noiembrie 2018</em></h4>
 
 </div>
 
 
 <div id="defining-a-ts-object" class="section level2">
-<h2>1. Defining a <strong>ts</strong> object</h2>
+<h2>1. Defining a <code>ts</code> object</h2>
 <div id="a-using-the-ts-function" class="section level3">
-<h3>a) using the <strong>ts</strong> function</h3>
+<h3>a) using the <code>ts</code> function</h3>
+<div id="main-arguments" class="section level5">
+<h5><em>main arguments</em></h5>
+<ul>
+<li><strong>data</strong> = a vector or matrix of the observed time-series values. A data frame will be coerced to a numeric matrix via data.matrix; defaults to <em>NA</em></li>
+<li><strong>start</strong> = the time of the first observation. Either a single number or a vector of two integers, which specify a natural time unit and a (1-based) number of samples into the time unit. See the examples for the use of the second form; defaults to <em>1</em></li>
+<li><strong>end</strong> = the time of the last observation, specified in the same way as start; defaults to <em>numeric()</em></li>
+<li><strong>frequency</strong> = the number of observations per unit of time; defaults to <em>1</em></li>
+</ul>
+</div>
+<div id="other-useful-arguments" class="section level5">
+<h5><em>other useful arguments</em></h5>
+<ul>
+<li><strong>deltat</strong> = the fraction of the sampling period between successive observations; e.g., 1/12 for monthly data. Only one of frequency or deltat should be provided; defaults to <em>1</em></li>
+<li><strong>ts.eps</strong> = time series comparison tolerance. Frequencies are considered equal if their absolute difference is less than ts.eps; defaults to <em>getOption(“ts.eps”)</em></li>
+<li><strong>class</strong> = class to be given to the result, or none if NULL or “none”. The default is “ts” for a single series, c(“mts”, “ts”, “matrix”) for multiple series;</li>
+<li><strong>names</strong> = a character vector of names for the series in a multiple series: defaults to the colnames of data, or Series 1, Series 2, ….;</li>
+</ul>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">y &lt;-<span class="st"> </span><span class="kw">ts</span>(<span class="kw">c</span>(<span class="dv">123</span>,<span class="dv">39</span>,<span class="dv">78</span>,<span class="dv">52</span>,<span class="dv">110</span>), <span class="dt">start=</span><span class="dv">2012</span>)
 y</code></pre></div>
 <pre><code>## Time Series:
@@ -165,13 +182,15 @@ y</code></pre></div>
 ## End = 2016 
 ## Frequency = 1 
 ## [1] 123  39  78  52 110</code></pre>
+</div>
 <div id="if-you-have-annual-data-with-one-observation-per-year-you-only-need-to-provide-the-starting-year-or-the-ending-year." class="section level4">
 <h4>If you have annual data, with one observation per year, you only need to provide the starting year (or the ending year).</h4>
 </div>
 <div id="for-observations-that-are-more-frequent-than-once-per-year-you-simply-add-a-frequency-argument.-for-example-if-your-monthly-data-is-already-stored-as-a-numerical-vector-z-then-it-can-be-converted-to-a-ts-object-like-this" class="section level4">
-<h4>For observations that are more frequent than once per year, you simply add a <strong>frequency</strong> argument. For example, if your monthly data is already stored as a numerical vector <strong>z</strong>, then it can be converted to a <strong>ts</strong> object like this:</h4>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">z &lt;-<span class="st"> </span><span class="kw">c</span>(<span class="dv">123</span>,<span class="dv">39</span>,<span class="dv">78</span>,<span class="dv">52</span>,<span class="dv">110</span>)
-y &lt;-<span class="st"> </span><span class="kw">ts</span>(z, <span class="dt">start=</span><span class="dv">2003</span>, <span class="dt">frequency=</span><span class="dv">12</span>)
+<h4>For observations that are more frequent than once per year, you simply add a <code>frequency</code> argument. For example, if your monthly data is already stored as a numerical vector <code>z</code>, then it can be converted to a <code>ts</code> object like this:</h4>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="co"># controlling the number of observations per unit of time with &quot;frequency&quot;</span>
+z &lt;-<span class="st"> </span><span class="kw">c</span>(<span class="dv">123</span>,<span class="dv">39</span>,<span class="dv">78</span>,<span class="dv">52</span>,<span class="dv">110</span>)
+y &lt;-<span class="st"> </span><span class="kw">ts</span>(z, <span class="dt">start=</span><span class="dv">2003</span>, <span class="dt">frequency=</span><span class="dv">12</span>) <span class="co"># the default frequency = 1</span>
 y</code></pre></div>
 <pre><code>##      Jan Feb Mar Apr May
 ## 2003 123  39  78  52 110</code></pre>
@@ -180,6 +199,61 @@ y</code></pre></div>
 </div>
 <div id="time-plots" class="section level2">
 <h2>2. Time plots</h2>
+<div id="for-time-series-data-the-obvious-graph-to-start-with-is-a-time-plot.-that-is-the-observations-are-plotted-against-the-time-of-observation-with-consecutive-observations-joined-by-straight-lines.-figure-2.1-below-shows-the-weekly-economy-passenger-load-on-ansett-airlines-between-australias-two-largest-cities." class="section level4">
+<h4>For time series data, the obvious graph to start with is a time plot. That is, the observations are plotted against the time of observation, with consecutive observations joined by straight lines. Figure 2.1 below shows the weekly economy passenger load on Ansett Airlines between Australia’s two largest cities.</h4>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">library</span>(ggplot2)
+<span class="cf">if</span>(<span class="ot">FALSE</span>) {
+<span class="kw">autoplot</span>(melsyd[,<span class="st">&quot;Economy.Class&quot;</span>]) <span class="op">+</span>
+<span class="st">  </span><span class="kw">ggtitle</span>(<span class="st">&quot;Economy class passengers: Melbourne-Sydney&quot;</span>) <span class="op">+</span>
+<span class="st">  </span><span class="kw">xlab</span>(<span class="st">&quot;Year&quot;</span>) <span class="op">+</span>
+<span class="st">  </span><span class="kw">ylab</span>(<span class="st">&quot;Thousands&quot;</span>)
+}</code></pre></div>
+</div>
+<div id="figure-2.1-weekly-economy-passenger-load-on-ansett-airlines." class="section level4">
+<h4>Figure 2.1: Weekly economy passenger load on Ansett Airlines.</h4>
+</div>
+<div id="we-will-use-the-autoplot-command-frequently.-it-automatically-produces-an-appropriate-plot-of-whatever-you-pass-to-it-in-the-first-argument.-in-this-case-it-recognises-melsydeconomy.class-as-a-time-series-and-produces-a-time-plot." class="section level4">
+<h4>We will use the <code>autoplot()</code> command frequently. It automatically produces an appropriate plot of whatever you pass to it in the first argument. In this case, it recognises melsyd[,“Economy.Class”] as a time series and produces a time plot.</h4>
+</div>
+<div id="the-time-plot-immediately-reveals-some-interesting-features." class="section level4">
+<h4>The time plot immediately reveals some interesting features.</h4>
+</div>
+<div id="there-was-a-period-in-1989-when-no-passengers-were-carried-this-was-due-to-an-industrial-dispute." class="section level4">
+<h4>There was a period in 1989 when no passengers were carried — this was due to an industrial dispute.</h4>
+</div>
+<div id="there-was-a-period-of-reduced-load-in-1992.-this-was-due-to-a-trial-in-which-some-economy-class-seats-were-replaced-by-business-class-seats." class="section level4">
+<h4>There was a period of reduced load in 1992. This was due to a trial in which some economy class seats were replaced by business class seats.</h4>
+</div>
+<div id="a-large-increase-in-passenger-load-occurred-in-the-second-half-of-1991." class="section level4">
+<h4>A large increase in passenger load occurred in the second half of 1991.</h4>
+</div>
+<div id="there-are-some-large-dips-in-load-around-the-start-of-each-year.-these-are-due-to-holiday-effects." class="section level4">
+<h4>There are some large dips in load around the start of each year. These are due to holiday effects.</h4>
+</div>
+<div id="there-is-a-long-term-fluctuation-in-the-level-of-the-series-which-increases-during-1987-decreases-in-1989-and-increases-again-through-1990-and-1991." class="section level4">
+<h4>There is a long-term fluctuation in the level of the series which increases during 1987, decreases in 1989, and increases again through 1990 and 1991.</h4>
+</div>
+<div id="there-are-some-periods-of-missing-observations." class="section level4">
+<h4>There are some periods of missing observations.</h4>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="cf">if</span>(<span class="ot">FALSE</span>) {
+<span class="kw">autoplot</span>(a10) <span class="op">+</span>
+<span class="st">  </span><span class="kw">ggtitle</span>(<span class="st">&quot;Antidiabetic drug sales&quot;</span>) <span class="op">+</span>
+<span class="st">  </span><span class="kw">ylab</span>(<span class="st">&quot;$ million&quot;</span>) <span class="op">+</span>
+<span class="st">  </span><span class="kw">xlab</span>(<span class="st">&quot;Year&quot;</span>)
+}</code></pre></div>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="cf">if</span>(<span class="ot">FALSE</span>)
+<span class="kw">ggseasonplot</span>(a10, <span class="dt">year.labels=</span><span class="ot">TRUE</span>, <span class="dt">year.labels.left=</span><span class="ot">TRUE</span>) <span class="op">+</span>
+<span class="st">  </span><span class="kw">ylab</span>(<span class="st">&quot;$ million&quot;</span>) <span class="op">+</span>
+<span class="st">  </span><span class="kw">ggtitle</span>(<span class="st">&quot;Seasonal plot: antidiabetic drug sales&quot;</span>)</code></pre></div>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="cf">if</span>(<span class="ot">FALSE</span>)
+<span class="kw">ggseasonplot</span>(a10, <span class="dt">polar=</span><span class="ot">TRUE</span>) <span class="op">+</span>
+<span class="st">  </span><span class="kw">ylab</span>(<span class="st">&quot;$ million&quot;</span>) <span class="op">+</span>
+<span class="st">  </span><span class="kw">ggtitle</span>(<span class="st">&quot;Polar seasonal plot: antidiabetic drug sales&quot;</span>)</code></pre></div>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="cf">if</span>(<span class="ot">FALSE</span>)
+<span class="kw">ggsubseriesplot</span>(a10) <span class="op">+</span>
+<span class="st">  </span><span class="kw">ylab</span>(<span class="st">&quot;$ million&quot;</span>) <span class="op">+</span>
+<span class="st">  </span><span class="kw">ggtitle</span>(<span class="st">&quot;Seasonal subseries plot: antidiabetic drug sales&quot;</span>)</code></pre></div>
+</div>
 </div>
 
 

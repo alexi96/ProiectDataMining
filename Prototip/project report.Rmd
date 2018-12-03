@@ -11,10 +11,24 @@ output:
 
 ```{r setup, include = FALSE}
 knitr::opts_chunk$set(include = TRUE, echo = TRUE)
+library(ggplot2)
+require(GGally)
 ```
 
-## 1. Defining a **ts** object 
-### a) using the **ts** function 
+## 1. Defining a `ts` object 
+### a) using the `ts` function 
+
+##### *main arguments*
+* **data** = a vector or matrix of the observed time-series values. A data frame will be coerced to a numeric matrix via data.matrix; defaults to *NA* 
+* **start** = the time of the first observation. Either a single number or a vector of two integers, which specify a natural time unit and a (1-based) number of samples into the time unit. See the examples for the use of the second form; defaults to *1* 
+* **end** = the time of the last observation, specified in the same way as start; defaults to *numeric()* 
+* **frequency** = the number of observations per unit of time; defaults to *1*
+
+##### *other useful arguments*
+* **deltat** = the fraction of the sampling period between successive observations; e.g., 1/12 for monthly data. Only one of frequency or deltat should be provided; defaults to *1*
+* **ts.eps** = time series comparison tolerance. Frequencies are considered equal if their absolute difference is less than ts.eps; defaults to *getOption("ts.eps")*
+* **class** = class to be given to the result, or none if NULL or "none". The default is "ts" for a single series, c("mts", "ts", "matrix") for multiple series;
+* **names** = a character vector of names for the series in a multiple series: defaults to the colnames of data, or Series 1, Series 2, ....;
 
 ```{r}
 y <- ts(c(123,39,78,52,110), start=2012)
@@ -23,12 +37,120 @@ y
 
 #### If you have annual data, with one observation per year, you only need to provide the starting year (or the ending year).
 
-#### For observations that are more frequent than once per year, you simply add a **frequency** argument. For example, if your monthly data is already stored as a numerical vector **z**, then it can be converted to a **ts** object like this:
+#### For observations that are more frequent than once per year, you simply add a `frequency` argument. For example, if your monthly data is already stored as a numerical vector `z`, then it can be converted to a `ts` object like this:
 
 ```{r}
+# controlling the number of observations per unit of time with "frequency"
 z <- c(123,39,78,52,110)
-y <- ts(z, start=2003, frequency=12)
+y <- ts(z, start=2003, frequency=12) # the default frequency = 1
 y
 ```
 
 ## 2. Time plots
+#### For time series data, the obvious graph to start with is a time plot. That is, the observations are plotted against the time of observation, with consecutive observations joined by straight lines. Figure 2.1 below shows the weekly economy passenger load on Ansett Airlines between Australia’s two largest cities.
+
+```{r}
+if(FALSE) {
+autoplot(melsyd[,"Economy.Class"]) +
+  ggtitle("Economy class passengers: Melbourne-Sydney") +
+  xlab("Year") +
+  ylab("Thousands")
+}
+```
+
+#### Figure 2.1: Weekly economy passenger load on Ansett Airlines.
+
+#### We will use the `autoplot()` command frequently. It automatically produces an appropriate plot of whatever you pass to it in the first argument. In this case, it recognises melsyd[,"Economy.Class"] as a time series and produces a time plot.
+
+#### The time plot immediately reveals some interesting features.
+
+#### There was a period in 1989 when no passengers were carried — this was due to an industrial dispute.
+#### There was a period of reduced load in 1992. This was due to a trial in which some economy class seats were replaced by business class seats.
+#### A large increase in passenger load occurred in the second half of 1991.
+#### There are some large dips in load around the start of each year. These are due to holiday effects.
+#### There is a long-term fluctuation in the level of the series which increases during 1987, decreases in 1989, and increases again through 1990 and 1991.
+#### There are some periods of missing observations.
+
+```{r}
+if(FALSE) {
+autoplot(a10) +
+  ggtitle("Antidiabetic drug sales") +
+  ylab("$ million") +
+  xlab("Year")
+}
+```
+
+```{r}
+if(FALSE)
+ggseasonplot(a10, year.labels=TRUE, year.labels.left=TRUE) +
+  ylab("$ million") +
+  ggtitle("Seasonal plot: antidiabetic drug sales")
+```
+
+```{r}
+if(FALSE)
+ggseasonplot(a10, polar=TRUE) +
+  ylab("$ million") +
+  ggtitle("Polar seasonal plot: antidiabetic drug sales")
+```
+
+```{r}
+if(FALSE)
+ggsubseriesplot(a10) +
+  ylab("$ million") +
+  ggtitle("Seasonal subseries plot: antidiabetic drug sales")
+```
+
+```{r}
+if(FALSE)
+autoplot(elecdemand[,c("Demand","Temperature")], facets=TRUE) +
+  xlab("Year: 2014") + ylab("") +
+  ggtitle("Half-hourly electricity demand: Victoria, Australia")
+```
+
+```{r}
+if(FALSE)
+qplot(Temperature, Demand, data=as.data.frame(elecdemand)) +
+  ylab("Demand (GW)") + xlab("Temperature (Celsius)")
+```
+
+```{r}
+if(FALSE)
+autoplot(visnights[,1:5], facets=TRUE) +
+  ylab("Number of visitor nights each quarter (millions)")
+```
+
+```{r}
+if(FALSE)
+GGally::ggpairs(as.data.frame(visnights[,1:5]))
+```
+
+```{r}
+if(FALSE) {
+beer2 <- window(ausbeer, start=1992)
+gglagplot(beer2)
+}
+```
+
+```{r}
+if(FALSE)
+ggAcf(beer2)
+```
+
+```{r}
+if(FALSE) {
+aelec <- window(elec, start=1980)
+autoplot(aelec) + xlab("Year") + ylab("GWh")
+}
+```
+
+```{r}
+if(FALSE)
+ggAcf(aelec, lag=48)
+```
+
+```{r}
+set.seed(30)
+y <- ts(rnorm(50))
+autoplot(y) + ggtitle("White noise")
+```
