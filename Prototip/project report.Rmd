@@ -191,7 +191,7 @@ qplot(Temperature, Demand, data=as.data.frame(elecdemand)) +
 <center>
 
 
-#### The value of **r** always lies between **â?’1** and **1** with negative values indicating a negative relationship and positive values indicating a positive relationship. The following graphs show examples of data sets with varying levels of correlation.
+#### The value of **r** always lies between **âˆ’1** and **1** with negative values indicating a negative relationship and positive values indicating a positive relationship. The following graphs show examples of data sets with varying levels of correlation.
 
 
 <center>
@@ -238,7 +238,7 @@ GGally::ggpairs(as.data.frame(visnights[,1:5]))
 
 
 
-#### The next figure displays scatterplots of quarterly Australian beer production, where the horizontal axis shows lagged values of the time series. Each graph shows **yt** plotted against **ytâ?’k** for different values of k.
+#### The next figure displays scatterplots of quarterly Australian beer production, where the horizontal axis shows lagged values of the time series. Each graph shows **yt** plotted against **ytâˆ’k** for different values of k.
 
 
 ```{r}
@@ -321,9 +321,9 @@ autoplot(y) + ggtitle("White noise")
 ```
 
 
-#### For white noise series, we expect each autocorrelation to be close to zero. Of course, they will not be exactly equal to zero as there is some random variation. For a white noise series, we expect 95% of the spikes in the ACF to lie within Â±2/â?šT where T is the length of the time series.
+#### For white noise series, we expect each autocorrelation to be close to zero. Of course, they will not be exactly equal to zero as there is some random variation. For a white noise series, we expect 95% of the spikes in the ACF to lie within Â±2/âˆšT where T is the length of the time series.
  
-#### In this example, T=50 and so the bounds are at Â±2/â?š50=Â±0.28.All of the autocorrelation coefficients lie within these limits, confirming that the data are white noise.
+#### In this example, T=50 and so the bounds are at Â±2/âˆš50=Â±0.28.All of the autocorrelation coefficients lie within these limits, confirming that the data are white noise.
 
 
 ```{r}
