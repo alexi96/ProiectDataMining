@@ -89,7 +89,7 @@ autoplot(a10) +
 
 
 <center>
-![](C:\Users\Eva\Documents\GitHub\ProiectDataMining\Prototip\Figure2.3.png)
+![](Figure2.3.png)
 </center>
 
 #### 1.The monthly housing sales (top left) show strong seasonality within each year, as well as some strong cyclic behaviour with a period of about 6–10 years. There is no apparent trend in the data over this period.
@@ -174,7 +174,7 @@ qplot(Temperature, Demand, data=as.data.frame(elecdemand)) +
 
 
 <center>
-![](C:\Users\Eva\Documents\GitHub\ProiectDataMining\Prototip\correlationFormula.png)
+![](correlationFormula.png)
 <center>
 
 
@@ -182,13 +182,13 @@ qplot(Temperature, Demand, data=as.data.frame(elecdemand)) +
 
 
 <center>
-![](C:\Users\Eva\Documents\GitHub\ProiectDataMining\Prototip\correlationGraphs.png)
+![](correlationGraphs.png)
 <center>
 
 
 
 <center>
-![](C:\Users\Eva\Documents\GitHub\ProiectDataMining\Prototip\correlationGraphsDots.png)
+![](correlationGraphsDots.png)
 <center>
 
 
@@ -246,7 +246,7 @@ gglagplot(beer2)
 
 
 <center>
-![](C:\Users\Eva\Documents\GitHub\ProiectDataMining\Prototip\Autocorellation1.png)
+![](Autocorellation1.png)
 <center>
 
 
@@ -254,7 +254,7 @@ gglagplot(beer2)
 
 
 <center>
-![](C:\Users\Eva\Documents\GitHub\ProiectDataMining\Prototip\Autocorellation2.png)
+![](Autocorellation2.png)
 <center>
 
 
