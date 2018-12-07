@@ -187,7 +187,7 @@ qplot(Temperature, Demand, data=as.data.frame(elecdemand)) +
 
 
 <center>
-![](correlationFormula.png)
+\[ r = \frac{\sum (x_{t} - \bar{x})(y_{t}-\bar{y})}{\sqrt{\sum(x_{t}-\bar{x})^2}\sqrt{\sum(y_{t}-\bar{y})^2}}. \] The value of \(r\)
 <center>
 
 

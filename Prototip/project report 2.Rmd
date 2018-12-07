@@ -118,6 +118,8 @@ autoplot(goog200) +
   guides(colour=guide_legend(title="Forecast"))
 ```
 
+#### Sometimes one of these simple methods will be the best forecasting method available; but in many cases, these methods will serve as benchmarks rather than the method of choice. That is, any forecasting methods we develop will be compared to these simple methods to ensure that the new method is better than these simple alternatives. If not, the new method is not worth considering.
+
 ## 11. Transformations and adjustments
 
 ### **11.1 Calendar adjustments**
@@ -146,4 +148,84 @@ dframe <- cbind(Monthly = milk,
 
 ### **11.4 Mathematical transformations**
 
-#### If the data show variation that increases or decreases with the level of the series, then a transformation can be useful. For example, a logarithmic transformation is often useful. If we denote the original observations as ![](MathematicalTransformations1.png) and the transformed observations as 
+#### If the data show variation that increases or decreases with the level of the series, then a transformation can be useful. For example, a logarithmic transformation is often useful. If we denote the original observations as ![](MathematicalTransformations1.png) and the transformed observations as ![](MathematicalTransformations2.png), then ![](MathematicalTransformations3.png). Logarithms are useful because they are interpretable: changes in a log value are relative (or percentage) changes on the original scale. So if log base 10 is used, then an increase of 1 on the log scale corresponds to a multiplication of 10 on the original scale. Another useful feature of log transformations is that they constrain the forecasts to stay positive on the original scale.
+
+#### Sometimes other transformations are also used (although they are not so interpretable). For example, square roots and cube roots can be used. These are called **power transformations** because they can be written in the form ![](MathematicalTransformations4.png)
+
+#### A useful family of transformations, that includes both logarithms and power transformations, is the family of Box-Cox transformations, which depend on the parameter λ and are defined as follows: 
+
+<center>
+![](MathematicalTransformations5.png)
+</center>
+
+#### The logarithm in a Box-Cox transformation is always a natural logarithm (i.e., to base e). So if λ=0, natural logarithms are used, but if λ≠0, a power transformation is used, followed by some simple scaling.
+
+#### If λ=1, then ![](MathematicalTransformations6.png), so the transformed data is shifted downwards but there is no change in the shape of the time series. But for all other values of λ, the time series will change shape.
+
+#### Use the slider below to see the effect of varying λ to transform Australian monthly electricity demand:
+
+```{r}
+(lambda <- BoxCox.lambda(elec))
+autoplot(BoxCox(elec,lambda))
+```
+
+#### A good value of λ is one which makes the size of the seasonal variation about the same across the whole series, as that makes the forecasting model simpler. In this case, λ=0.30 works quite well, although any value of λ between 0 and 0.5 would give similar results.
+
+#### The ```BoxCox.lambda()``` function will choose a value of lambda for you.
+
+```{r}
+(lambda <- BoxCox.lambda(elec))
+#> [1] 0.2654
+autoplot(BoxCox(elec,lambda))
+```
+
+#### Having chosen a transformation, we need to forecast the transformed data. Then, we need to reverse the transformation (or back-transform) to obtain forecasts on the original scale. The reverse Box-Cox transformation is given by 
+
+<center>
+![](MathematicalTransformations7.png)
+</center>
+
+### **11.5 Features of power transformations**
+
+* #### If some ![](FeaturesOfPowerTransformations.png), no power transformation is possible unless all observations are adjusted by adding a constant to all values.
+* #### Choose a simple value of λ. It makes explanations easier.
+* #### The forecasting results are relatively insensitive to the value of λ.
+* #### Often no transformation is needed.
+* #### Transformations sometimes make little difference to the forecasts but have a large effect on prediction intervals.
+
+### **11.5 Bias adjustments**
+
+#### One issue with using mathematical transformations such as Box-Cox transformations is that the back-transformed point forecast will not be the mean of the forecast distribution. In fact, it will usually be the median of the forecast distribution (assuming that the distribution on the transformed space is symmetric). For many purposes, this is acceptable, but occasionally the mean forecast is required. For example, you may wish to add up sales forecasts from various regions to form a forecast for the whole country. But medians do not add up, whereas means do.
+
+#### For a Box-Cox transformation, the back-transformed mean is given by 
+
+<center>
+![](BiasAdjustments1.png)
+</center>
+
+#### where ![](BiasAdjustments2.png) is the ***h***-step forecast variance. The larger the forecast variance, the bigger the difference between the mean and the median.
+
+#### The difference between the simple back-transformed forecast given by (3.1) and the mean given by (3.2) is called the **bias**. When we use the mean, rather than the median, we say the point forecasts have been **bias-adjusted**.
+
+#### To see how much difference this bias-adjustment makes, consider the following example, where we forecast average annual price of eggs using the drift method with a log transformation (λ=0). The log transformation is useful in this case to ensure the forecasts and the prediction intervals stay positive.
+
+```{r}
+fc <- rwf(eggs, drift=TRUE, lambda=0, h=50, level=80)
+fc2 <- rwf(eggs, drift=TRUE, lambda=0, h=50, level=80,
+  biasadj=TRUE)
+autoplot(eggs) +
+  autolayer(fc, series="Simple back transformation") +
+  autolayer(fc2, series="Bias adjusted", PI=FALSE) +
+  guides(colour=guide_legend(title="Forecast"))
+```
+
+#### The blue line in Figure 3.4 shows the forecast medians while the red line shows the forecast means. Notice how the skewed forecast distribution pulls up the point forecast when we use the bias adjustment.
+
+#### Bias adjustment is not done by default in the **forecast** package. If you want your forecasts to be means rather than medians, use the argument ```biasadj=TRUE``` when you select your Box-Cox transformation parameter.
+
+## 12. Residual diagnostics
+
+### 12.1 Fitted values
+
+#### Each observation in a time series can be forecast using all previous observations. We call these **fitted values** and they are denoted by ![](FittedValues1.png) 
+

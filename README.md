@@ -12,3 +12,7 @@ Utile
 - [ ] Documentatie functii importante cap 2
 - [ ] Exercitii cap 2
 - [ ] Prezentare slidy
+
+Bugs:
+- [ ] 3.2 Mathematical transformations: Cum fac un slider?
+- [ ] Bug scimba imaginile cu Rmd equation
