@@ -22,13 +22,13 @@ library(fpp2)
 
 ### **10.1. Average method**
 
-#### Here, the forecasts of all future values are equal to the average (or “mean”) of the historical data. If we let the historical data be denoted by y1,…,yT, then we can write the forecasts as 
+#### Here, the forecasts of all future values are equal to the average (or “mean”) of the historical data. If we let the historical data be denoted by $y_{1},\dots,y_{T}$, then we can write the forecasts as 
 
 <center>
-![](AverageMethod.png)
+$\hat{y}_{T+h|T} = \bar{y} = (y_{1}+\dots+y_{T})/T.$
 </center>
 
-#### The notation ![](AverageMethodP1.png) is a short-hand for the estimate of ![](AverageMethodP2.png) based on the data ![](AverageMethodP3.png).
+#### The notation $\hat{y}_{T+h|T}$ is a short-hand for the estimate of $y_{T+h}$ based on the data $y_1,\dots,y_T$.
 
 ```{r}
 y <- ts(c(123,39,78,52,110), start=2012) # y contains the time series
@@ -39,7 +39,7 @@ meanf(y, h)
 
 #### For naïve forecasts, we simply set all forecasts to be the value of the last observation. That is, 
 <center>
-![](NaiveMethod.png)
+$\hat{y}_{T+h|T} = y_{T}.$
 </center>
 
 #### This method works remarkably well for many economic and financial time series.
@@ -51,15 +51,17 @@ naive(y, h)
 rwf(y, h) # Equivalent alternative
 ```
 
+####Because a naïve forecast is optimal when data follow a random walk (see Section 8.1), these are also called random **walk forecasts.**
+
 ### **10.3. Seasonal naïve method**
 
-####  similar method is useful for highly seasona l data. In this case, we set each forecast to be equal to the last observed value from the same season of the year (e.g., the same month of the previous year). Formally, the forecast for time T+h is written as
+####  similar method is useful for highly seasona l data. In this case, we set each forecast to be equal to the last observed value from the same season of the year (e.g., the same month of the previous year). Formally, the forecast for time $T+h$ is written as
 
 <center>
-![](SeasonalNaiveMethod.png)
+$\hat{y}_{T+h|T} = y_{T+h-m(k+1)},$
 </center>
 
-#### where m= the seasonal period, and k is the integer part of (h−1)/m (i.e., the number of complete years in the forecast period prior to time T+h). This looks more complicated than it really is. For example, with monthly data, the forecast for all future February values is equal to the last observed February value. With quarterly data, the forecast of all future Q2 values is equal to the last observed Q2 value (where Q2 means the second quarter). Similar rules apply for other months and quarters, and for other seasonal periods.
+#### where $m=$ the seasonal period, and $k$ is the integer part of $(h−1)/m$ (i.e., the number of complete years in the forecast period prior to time $T+h$). This looks more complicated than it really is. For example, with monthly data, the forecast for all future February values is equal to the last observed February value. With quarterly data, the forecast of all future Q2 values is equal to the last observed Q2 value (where Q2 means the second quarter). Similar rules apply for other months and quarters, and for other seasonal periods.
 
 ```{r}
 y <- ts(c(123,39,78,52,110), start=2012) # y contains the time series
@@ -69,10 +71,10 @@ snaive(y, h)
 
 ### **10.3. Seasonal naïve method**
 
-#### A variation on the naïve method is to allow the forecasts to increase or decrease over time, where the amount of change over time (called the **drift**) is set to be the average change seen in the historical data. Thus the forecast for time T+h is given by 
+#### A variation on the naïve method is to allow the forecasts to increase or decrease over time, where the amount of change over time (called the **drift**) is set to be the average change seen in the historical data. Thus the forecast for time $T+h$ is given by 
 
 <center>
-![](DriftMethod.png)
+$\hat{y}_{T+h|T} = y_{T} + \frac{h}{T-1}\sum_{t=2}^T (y_{t}-y_{t-1}) = y_{T} + h \left( \frac{y_{T} -y_{1}}{T-1}\right).$
 </center>
 
 #### This is equivalent to drawing a line between the first and last observations, and extrapolating it into the future.
@@ -144,13 +146,15 @@ dframe <- cbind(Monthly = milk,
 
 #### Data which are affected by the value of money are best adjusted before modelling. For example, the average cost of a new house will have increased over the last few decades due to inflation. A $200,000 house this year is not the same as a $200,000 house twenty years ago. For this reason, financial time series are usually adjusted so that all values are stated in dollar values from a particular year. For example, the house price data may be stated in year 2000 dollars.
 
-#### To make these adjustments, a price index is used. If ![](PopulationAdjustments1.png) denotes the price index and ![](PopulationAdjustments2.png) denotes the original house price in year t, then ![](PopulationAdjustments3.png) gives the adjusted house price at year 2000 dollar values. Price indexes are often constructed by government agencies. For consumer goods, a common price index is the Consumer Price Index (or CPI).
+### **11.4 Inflation adjustments**
 
-### **11.4 Mathematical transformations**
+#### To make these adjustments, a price index is used. If $z_{t}$ denotes the price index and $y_{t}$ denotes the original house price in year $t$, then $x_{t} = y_{t}/z_{t} * z_{2000}$ gives the adjusted house price at year 2000 dollar values. Price indexes are often constructed by government agencies. For consumer goods, a common price index is the Consumer Price Index (or CPI).
 
-#### If the data show variation that increases or decreases with the level of the series, then a transformation can be useful. For example, a logarithmic transformation is often useful. If we denote the original observations as ![](MathematicalTransformations1.png) and the transformed observations as ![](MathematicalTransformations2.png), then ![](MathematicalTransformations3.png). Logarithms are useful because they are interpretable: changes in a log value are relative (or percentage) changes on the original scale. So if log base 10 is used, then an increase of 1 on the log scale corresponds to a multiplication of 10 on the original scale. Another useful feature of log transformations is that they constrain the forecasts to stay positive on the original scale.
+### **11.5 Mathematical transformations**
 
-#### Sometimes other transformations are also used (although they are not so interpretable). For example, square roots and cube roots can be used. These are called **power transformations** because they can be written in the form ![](MathematicalTransformations4.png)
+#### If the data show variation that increases or decreases with the level of the series, then a transformation can be useful. For example, a logarithmic transformation is often useful. If we denote the original observations as $y_{1},\dots,y_{T}$ and the transformed observations as $w_{1}, \dots, w_{T}$, then $w_t = \log(y_t)$. Logarithms are useful because they are interpretable: changes in a log value are relative (or percentage) changes on the original scale. So if log base 10 is used, then an increase of 1 on the log scale corresponds to a multiplication of 10 on the original scale. Another useful feature of log transformations is that they constrain the forecasts to stay positive on the original scale.
+
+#### Sometimes other transformations are also used (although they are not so interpretable). For example, square roots and cube roots can be used. These are called **power transformations** because they can be written in the form $w_{t} = y_{t}^p$
 
 #### A useful family of transformations, that includes both logarithms and power transformations, is the family of Box-Cox transformations, which depend on the parameter λ and are defined as follows: 
 
@@ -185,7 +189,7 @@ autoplot(BoxCox(elec,lambda))
 ![](MathematicalTransformations7.png)
 </center>
 
-### **11.5 Features of power transformations**
+### **11.6 Features of power transformations**
 
 * #### If some ![](FeaturesOfPowerTransformations.png), no power transformation is possible unless all observations are adjusted by adding a constant to all values.
 * #### Choose a simple value of λ. It makes explanations easier.
@@ -193,7 +197,7 @@ autoplot(BoxCox(elec,lambda))
 * #### Often no transformation is needed.
 * #### Transformations sometimes make little difference to the forecasts but have a large effect on prediction intervals.
 
-### **11.5 Bias adjustments**
+### **11.7 Bias adjustments**
 
 #### One issue with using mathematical transformations such as Box-Cox transformations is that the back-transformed point forecast will not be the mean of the forecast distribution. In fact, it will usually be the median of the forecast distribution (assuming that the distribution on the transformed space is symmetric). For many purposes, this is acceptable, but occasionally the mean forecast is required. For example, you may wish to add up sales forecasts from various regions to form a forecast for the whole country. But medians do not add up, whereas means do.
 

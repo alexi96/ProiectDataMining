@@ -8,11 +8,11 @@ Utile
 - [x] Continut cap 1 
 - [ ] Documentatie functii importante cap 1 
 - [ ] Exercitii cap 1
-- [ ] Continut cap 2
+- [X] Continut cap 2
 - [ ] Documentatie functii importante cap 2
 - [ ] Exercitii cap 2
 - [ ] Prezentare slidy
 
 Bugs:
 - [ ] 3.2 Mathematical transformations: Cum fac un slider?
-- [ ] Bug scimba imaginile cu Rmd equation
+- [ ] Bug scimba imaginile cu ecuatii cu Rmd equation. Ramas la raport 2 158 
