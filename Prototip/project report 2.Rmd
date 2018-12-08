@@ -69,7 +69,7 @@ h = 10 # h is the forecast horizon
 snaive(y, h)
 ```
 
-### **10.3. Seasonal naïve method**
+### **10.4. Drift method**
 
 #### A variation on the naïve method is to allow the forecasts to increase or decrease over time, where the amount of change over time (called the **drift**) is set to be the average change seen in the historical data. Thus the forecast for time $T+h$ is given by 
 
@@ -85,7 +85,7 @@ h = 10 # h is the forecast horizon
 rwf(y, h, drift=TRUE)
 ```
 
-### **10.4. Examples**
+### **10.5. Examples**
 
 #### The Figure bellow shows the first three methods applied to the quarterly beer production data.
 
@@ -306,7 +306,7 @@ ggAcf(res) + ggtitle("ACF of residuals")
 
 #### These graphs show that the naïve method produces forecasts that appear to account for all available information. The mean of the residuals is close to zero and there is no significant correlation in the residuals series. The time plot of the residuals shows that the variation of the residuals stays much the same across the historical data, apart from the one outlier, and therefore the residual variance can be treated as constant. This can also be seen on the histogram of the residuals. The histogram suggests that the residuals may not be normal — the right tail seems a little too long, even when we ignore the outlier. Consequently, forecasts from this method will probably be quite good, but prediction intervals that are computed assuming a normal distribution may be inaccurate.
 
-### **12.3 Portmanteau tests for autocorrelation**
+### **12.4 Portmanteau tests for autocorrelation**
 
 #### In addition to looking at the ACF plot, we can also do a more formal test for autocorrelation by considering a whole set of $r_k$ values as a group, rather than treating each one separately.
 
@@ -433,7 +433,7 @@ $e_{T+h} = y_{T+h} - \hat{y}_{T+h|T},$
 
 #### We can measure forecast accuracy by summarising the forecast errors in different ways.
 
-### **13.3 Scale-dependent errors**
+### **13.4 Scale-dependent errors**
 
 #### The forecast errors are on the same scale as the data. Accuracy measures that are based only on $e_{t}$ are therefore scale-dependent and cannot be used to make comparisons between series that involve different units.
 
@@ -448,7 +448,7 @@ $\begin{align*}
 
 #### When comparing forecast methods applied to a single time series, or to several time series with the same units, the MAE is popular as it is easy to both understand and compute. A forecast method that minimises the MAE will lead to forecasts of the median, while minimising the RMSE will lead to forecasts of the mean. Consequently, the RMSE is also widely used, despite being more difficult to interpret.
 
-### **13.3 Percentage errors**
+### **13.5 Percentage errors**
 
 #### The percentage error is given by $p_{t} = 100 e_{t}/y_{t}$. Percentage errors have the advantage of being unit-free, and so are frequently used to compare forecast performances between data sets. The most commonly used measure is: 
 
@@ -468,7 +468,7 @@ $\text{sMAPE} = \text{mean}\left(200|y_{t} - \hat{y}_{t}|/(y_{t}+\hat{y}_{t})\ri
 
 #### Hyndman & Koehler (2006) recommend that the sMAPE not be used. It is included here only because it is widely used, although we will not use it in this book.
 
-### **13.4 Percentage errors**
+### **13.5 Scaled errors**
 
 #### Scaled errors were proposed by Hyndman & Koehler (2006) as an alternative to using percentage errors when comparing forecast accuracy across series with different units. They proposed scaling the errors based on the training MAE from a simple forecast method.
 
@@ -494,7 +494,7 @@ $q_{j} = \frac{\displaystyle e_{j}}
 $\text{MASE} = \text{mean}(|q_{j}|).$
 </center>
 
-### **13.4 Examples**
+### **13.6 Examples**
 
 ```{r}
 beer2 <- window(ausbeer,start=1992,end=c(2007,4))
@@ -545,7 +545,7 @@ accuracy(googfc3, googtest)
 
 #### Here, the best method is the drift method (regardless of which accuracy measure is used).
 
-### **13.4 Time series cross-validation**
+### **13.7 Time series cross-validation**
 
 #### A more sophisticated version of training/test sets is time series cross-validation. In this procedure, there are a series of test sets, each consisting of a single observation. The corresponding training set consists only of observations that occurred prior to the observation that forms the test set. Thus, no future observations can be used in constructing the forecast. Since it is not possible to obtain a reliable forecast based on a small training set, the earliest observations are not considered as test sets.
 
@@ -577,7 +577,7 @@ sqrt(mean(residuals(rwf(goog200, drift=TRUE))^2, na.rm=TRUE))
 
 #### A good way to choose the best forecasting model is to find the model with the smallest RMSE computed using time series cross-validation.
 
-### **13.5 Pipe operator**
+### **13.8 Pipe operator**
 
 ####The ugliness of the above R code makes this a good opportunity to introduce some alternative ways of stringing R functions together. In the above code, we are nesting functions within functions within functions, so you have to read the code from the inside out, making it difficult to understand what is being computed. Instead, we can use the pipe operator ```%>%``` as follows.
 
@@ -594,7 +594,7 @@ res^2 %>% mean(na.rm=TRUE) %>% sqrt()
 
 #### We will use the pipe operator whenever it makes the code easier to read. In order to be consistent, we will always follow a function with parentheses to differentiate it from other objects, even if it has no arguments. See, for example, the use of ```sqrt()``` and ```residuals()``` in the code above.
 
-### **13.6 Example: using tsCV()**
+### **13.9 Example: using tsCV()**
 
 #### The ```goog200``` data, plotted in Figure 3.5, includes daily closing stock price of Google Inc from the NASDAQ exchange for 200 consecutive trading days starting on 25 February 2013.
 
@@ -609,7 +609,7 @@ data.frame(h = 1:8, MSE = mse) %>%
   ggplot(aes(x = h, y = MSE)) + geom_point()
 ```
 
-### **13.7 Bibliography**
+### **13.10 Bibliography**
 
 #### Armstrong, J. S. (1978). Long-range forecasting: From crystal ball to computer. John Wiley & Sons.
 
@@ -763,7 +763,7 @@ naive(goog200)
 autoplot(naive(goog200))
 ```
 
-### **14.3 Prediction intervals from bootstrapped residuals**
+### **14.4 Prediction intervals from bootstrapped residuals**
 
 #### When a normal distribution for the forecast errors is an unreasonable assumption, one alternative is to use bootstrapping, which only assumes that the forecast errors are uncorrelated.
 
@@ -808,7 +808,7 @@ naive(goog200, bootstrap=TRUE)
 
 #### In this case, they are similar (but not identical) to the prediction intervals based on the normal distribution.
 
-### **14.4 Prediction intervals with transformations**
+### **14.5 Prediction intervals with transformations**
 
 #### If a transformation has been used, then the prediction interval should be computed on the transformed scale, and the end points back-transformed to give a prediction interval on the original scale. This approach preserves the probability coverage of the prediction interval, although it will no longer be symmetric around the point forecast.
 

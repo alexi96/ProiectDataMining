@@ -112,7 +112,7 @@ autoplot(a10) +
 
 
 
-## 4.Seasonal plots
+## 4. Seasonal plots
 
 
 
@@ -138,7 +138,7 @@ ggseasonplot(a10, polar=TRUE) +
 
 
 
-## 5.Seasonal subseries plots
+## 5. Seasonal subseries plots
 
 
 
@@ -155,7 +155,7 @@ ggsubseriesplot(a10) +
 
 
 
-## 6.Scatterplots
+## 6. Scatterplots
 
 
 
@@ -179,7 +179,7 @@ qplot(Temperature, Demand, data=as.data.frame(elecdemand)) +
 
 
 
-### **6.1.Correlation**
+### **6.1. Correlation**
 
 
 
@@ -208,7 +208,7 @@ $r = \frac{\sum (x_{t} - \bar{x})(y_{t}-\bar{y})}{\sqrt{\sum(x_{t}-\bar{x})^2}\s
 #### The plots in the last figure all have correlation coefficients of 0.82, but they have very different relationships. This shows how important it is to look at the plots of the data and not simply rely on correlation values.
 
 
-### **6.2.Scatterplot matrices**
+### **6.2. Scatterplot matrices**
 
 
 #### When there are several potential predictor variables, it is useful to plot each variable against each other variable, as in showing quarterly visitor numbers for five regions of New South Wales, Australia.
@@ -234,7 +234,7 @@ GGally::ggpairs(as.data.frame(visnights[,1:5]))
 
 
 
-## 7.Lag plots
+## 7. Lag plots
 
 
 
@@ -252,7 +252,7 @@ gglagplot(beer2)
 
 
 
-## 8.Autocorellation
+## 8. Autocorellation
 
 
 #### Autocorrelation measures the linear relationship between lagged values of a time series. The value of rk can be written as:
@@ -283,7 +283,7 @@ ggAcf(beer2)
 #### The dashed blue lines indicate whether the correlations are significantly different from zero.
 
 
-### **6.Trend and seasonality in ACF plots**
+### **8.1 .Trend and seasonality in ACF plots**
 
 
 #### When data have a trend, the autocorrelations for small lags tend to be large and positive because observations nearby in time are also nearby in size. So the ACF of trended time series tend to have positive values that slowly decrease as the lags increase.
@@ -307,7 +307,7 @@ ggAcf(aelec, lag=48)
 
 
 
-## 9.White noise
+## 9. White noise
 
 
 

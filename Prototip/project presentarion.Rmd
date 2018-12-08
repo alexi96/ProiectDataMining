@@ -1,0 +1,124 @@
+---
+title: "Time series I: EDA"
+author:
+- name: Radu Ioan-Alexandru (Gr 405)
+- name: Stefan Eva (Gr 405)
+date: "\t `r format(Sys.time(), '%d %B %Y')`"
+output: slidy_presentation
+---
+
+```{r setup, include = FALSE}
+knitr::opts_chunk$set(include = TRUE, echo = TRUE)
+```
+
+## Structure
+
+**1. Defining a ```ts``` object**
+
+*a) using the **ts** function*
+
+**2. Time plots**
+
+**3. Time series patterns**
+
+*3.1 Trend:*
+
+*3.2 Seasonal:*
+
+*3.3 Cyclic:*
+
+**4.Seasonal plots**
+
+**5.Seasonal subseries plots**
+
+**6. Scatterplots**
+
+*6.1. Correlation*
+
+*6.2. Scatterplot matrices*
+
+**7. Lag plots**
+
+**8. Autocorellation**
+
+*8.1. Trend and seasonality in ACF plots*
+
+**9. White noise**
+
+**10. Some simple forecasting methods**
+
+*10.1. Average method*
+
+*10.2. Naive method*
+
+*10.3. Seasonal naive method*
+
+*10.4. Drift method*
+
+*10.5. Examples*
+
+**11. Transformations and adjustments**
+
+*11.1 Calendar adjustments*
+
+*11.2 Population adjustments*
+
+*11.3 Population adjustments*
+
+*11.4 Inflation adjustments*
+
+*11.5 Mathematical transformations*
+
+*11.6 Features of power transformations*
+
+*11.7 Bias adjustments*
+
+**12. Residual diagnostics**
+
+*12.1 Fitted values*
+
+*12.2 Residuals*
+
+*12.3 Example: Forecasting the Google daily closing stock price*
+
+*12.4 Portmanteau tests for autocorrelation*
+
+**13. Evaluating forecast accuracy**
+
+*13.1 Training and test sets*
+
+*13.2 Functions to subset a time series*
+
+*13.3 Forecast errors*
+
+*13.4 Scale-dependent errors*
+
+*13.5 Percentage errors*
+
+*13.6 Examples*
+
+*13.7 Time series cross-validation*
+
+*13.8 Pipe operator*
+
+*13.9 Example: using tsCV()*
+
+*13.10 Bibliography*
+
+**14. Prediction intervals**
+
+*14.1 One-step prediction intervals*
+
+*14.2 Multi-step prediction intervals*
+
+*14.3 Benchmark methods*
+
+*14.4 Prediction intervals from bootstrapped residuals*
+
+*14.5 Prediction intervals with transformations*
+
+**15. The forecast package in R**
+
+*15.1 Functions that output a forecast object:*
+
+*15.2 ```forecast()``` function*
