@@ -149,7 +149,7 @@ $(document).ready(function () {
 <h1 class="title toc-ignore">Fa merge cu celalalt fisier</h1>
 <h4 class="author"><em>Radu Ioan-Alexandru (Gr 405)</em></h4>
 <h4 class="author"><em>Stefan Eva (Gr 405)</em></h4>
-<h4 class="date"><em>07 decembrie 2018</em></h4>
+<h4 class="date"><em>10 decembrie 2018</em></h4>
 
 </div>
 
@@ -258,8 +258,8 @@ h =<span class="st"> </span><span class="dv">10</span> <span class="co"># h is t
 ## 2026            110 -117.606364 337.6064 -238.09389559 458.0939</code></pre>
 </div>
 </div>
-<div id="seasonal-naive-method-1" class="section level3">
-<h3><strong>10.3. Seasonal naïve method</strong></h3>
+<div id="drift-method" class="section level3">
+<h3><strong>10.4. Drift method</strong></h3>
 <div id="a-variation-on-the-naive-method-is-to-allow-the-forecasts-to-increase-or-decrease-over-time-where-the-amount-of-change-over-time-called-the-drift-is-set-to-be-the-average-change-seen-in-the-historical-data.-thus-the-forecast-for-time-th-is-given-by" class="section level4">
 <h4>A variation on the naïve method is to allow the forecasts to increase or decrease over time, where the amount of change over time (called the <strong>drift</strong>) is set to be the average change seen in the historical data. Thus the forecast for time <span class="math inline">\(T+h\)</span> is given by</h4>
 <center>
@@ -285,7 +285,7 @@ h =<span class="st"> </span><span class="dv">10</span> <span class="co"># h is t
 </div>
 </div>
 <div id="examples" class="section level3">
-<h3><strong>10.4. Examples</strong></h3>
+<h3><strong>10.5. Examples</strong></h3>
 <div id="the-figure-bellow-shows-the-first-three-methods-applied-to-the-quarterly-beer-production-data." class="section level4">
 <h4>The Figure bellow shows the first three methods applied to the quarterly beer production data.</h4>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="co"># Set training data from 1992 to 2007</span>
@@ -535,7 +535,7 @@ fc2 &lt;-<span class="st"> </span><span class="kw">rwf</span>(eggs, <span class=
 </div>
 </div>
 <div id="portmanteau-tests-for-autocorrelation" class="section level3">
-<h3><strong>12.3 Portmanteau tests for autocorrelation</strong></h3>
+<h3><strong>12.4 Portmanteau tests for autocorrelation</strong></h3>
 <div id="in-addition-to-looking-at-the-acf-plot-we-can-also-do-a-more-formal-test-for-autocorrelation-by-considering-a-whole-set-of-r_k-values-as-a-group-rather-than-treating-each-one-separately." class="section level4">
 <h4>In addition to looking at the ACF plot, we can also do a more formal test for autocorrelation by considering a whole set of <span class="math inline">\(r_k\)</span> values as a group, rather than treating each one separately.</h4>
 </div>
@@ -725,7 +725,7 @@ fc2 &lt;-<span class="st"> </span><span class="kw">rwf</span>(eggs, <span class=
 </div>
 </div>
 <div id="scale-dependent-errors" class="section level3">
-<h3><strong>13.3 Scale-dependent errors</strong></h3>
+<h3><strong>13.4 Scale-dependent errors</strong></h3>
 <div id="the-forecast-errors-are-on-the-same-scale-as-the-data.-accuracy-measures-that-are-based-only-on-e_t-are-therefore-scale-dependent-and-cannot-be-used-to-make-comparisons-between-series-that-involve-different-units." class="section level4">
 <h4>The forecast errors are on the same scale as the data. Accuracy measures that are based only on <span class="math inline">\(e_{t}\)</span> are therefore scale-dependent and cannot be used to make comparisons between series that involve different units.</h4>
 </div>
@@ -740,7 +740,7 @@ fc2 &lt;-<span class="st"> </span><span class="kw">rwf</span>(eggs, <span class=
 </div>
 </div>
 <div id="percentage-errors" class="section level3">
-<h3><strong>13.3 Percentage errors</strong></h3>
+<h3><strong>13.5 Percentage errors</strong></h3>
 <div id="the-percentage-error-is-given-by-p_t-100-e_ty_t.-percentage-errors-have-the-advantage-of-being-unit-free-and-so-are-frequently-used-to-compare-forecast-performances-between-data-sets.-the-most-commonly-used-measure-is" class="section level4">
 <h4>The percentage error is given by <span class="math inline">\(p_{t} = 100 e_{t}/y_{t}\)</span>. Percentage errors have the advantage of being unit-free, and so are frequently used to compare forecast performances between data sets. The most commonly used measure is:</h4>
 <center>
@@ -763,8 +763,8 @@ fc2 &lt;-<span class="st"> </span><span class="kw">rwf</span>(eggs, <span class=
 <h4>Hyndman &amp; Koehler (2006) recommend that the sMAPE not be used. It is included here only because it is widely used, although we will not use it in this book.</h4>
 </div>
 </div>
-<div id="percentage-errors-1" class="section level3">
-<h3><strong>13.4 Percentage errors</strong></h3>
+<div id="scaled-errors" class="section level3">
+<h3><strong>13.5 Scaled errors</strong></h3>
 <div id="scaled-errors-were-proposed-by-hyndman-koehler-2006-as-an-alternative-to-using-percentage-errors-when-comparing-forecast-accuracy-across-series-with-different-units.-they-proposed-scaling-the-errors-based-on-the-training-mae-from-a-simple-forecast-method." class="section level4">
 <h4>Scaled errors were proposed by Hyndman &amp; Koehler (2006) as an alternative to using percentage errors when comparing forecast accuracy across series with different units. They proposed scaling the errors based on the training MAE from a simple forecast method.</h4>
 </div>
@@ -791,7 +791,7 @@ fc2 &lt;-<span class="st"> </span><span class="kw">rwf</span>(eggs, <span class=
 </div>
 </div>
 <div id="examples-1" class="section level3">
-<h3><strong>13.4 Examples</strong></h3>
+<h3><strong>13.6 Examples</strong></h3>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">beer2 &lt;-<span class="st"> </span><span class="kw">window</span>(ausbeer,<span class="dt">start=</span><span class="dv">1992</span>,<span class="dt">end=</span><span class="kw">c</span>(<span class="dv">2007</span>,<span class="dv">4</span>))
 beerfit1 &lt;-<span class="st"> </span><span class="kw">meanf</span>(beer2,<span class="dt">h=</span><span class="dv">10</span>)
 beerfit2 &lt;-<span class="st"> </span><span class="kw">rwf</span>(beer2,<span class="dt">h=</span><span class="dv">10</span>)
@@ -873,7 +873,7 @@ googfc3 &lt;-<span class="st"> </span><span class="kw">rwf</span>(goog200, <span
 </div>
 </div>
 <div id="time-series-cross-validation" class="section level3">
-<h3><strong>13.4 Time series cross-validation</strong></h3>
+<h3><strong>13.7 Time series cross-validation</strong></h3>
 <div id="a-more-sophisticated-version-of-trainingtest-sets-is-time-series-cross-validation.-in-this-procedure-there-are-a-series-of-test-sets-each-consisting-of-a-single-observation.-the-corresponding-training-set-consists-only-of-observations-that-occurred-prior-to-the-observation-that-forms-the-test-set.-thus-no-future-observations-can-be-used-in-constructing-the-forecast.-since-it-is-not-possible-to-obtain-a-reliable-forecast-based-on-a-small-training-set-the-earliest-observations-are-not-considered-as-test-sets." class="section level4">
 <h4>A more sophisticated version of training/test sets is time series cross-validation. In this procedure, there are a series of test sets, each consisting of a single observation. The corresponding training set consists only of observations that occurred prior to the observation that forms the test set. Thus, no future observations can be used in constructing the forecast. Since it is not possible to obtain a reliable forecast based on a small training set, the earliest observations are not considered as test sets.</h4>
 </div>
@@ -910,7 +910,7 @@ googfc3 &lt;-<span class="st"> </span><span class="kw">rwf</span>(goog200, <span
 </div>
 </div>
 <div id="pipe-operator" class="section level3">
-<h3><strong>13.5 Pipe operator</strong></h3>
+<h3><strong>13.8 Pipe operator</strong></h3>
 <div id="the-ugliness-of-the-above-r-code-makes-this-a-good-opportunity-to-introduce-some-alternative-ways-of-stringing-r-functions-together.-in-the-above-code-we-are-nesting-functions-within-functions-within-functions-so-you-have-to-read-the-code-from-the-inside-out-making-it-difficult-to-understand-what-is-being-computed.-instead-we-can-use-the-pipe-operator-as-follows." class="section level4">
 <h4>The ugliness of the above R code makes this a good opportunity to introduce some alternative ways of stringing R functions together. In the above code, we are nesting functions within functions within functions, so you have to read the code from the inside out, making it difficult to understand what is being computed. Instead, we can use the pipe operator <code>%&gt;%</code> as follows.</h4>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">goog200 <span class="op">%&gt;%</span><span class="st"> </span><span class="kw">tsCV</span>(<span class="dt">forecastfunction=</span>rwf, <span class="dt">drift=</span><span class="ot">TRUE</span>, <span class="dt">h=</span><span class="dv">1</span>) -&gt;<span class="st"> </span>e
@@ -930,7 +930,7 @@ res<span class="op">^</span><span class="dv">2</span> <span class="op">%&gt;%</s
 </div>
 </div>
 <div id="example-using-tscv" class="section level3">
-<h3><strong>13.6 Example: using tsCV()</strong></h3>
+<h3><strong>13.9 Example: using tsCV()</strong></h3>
 <div id="the-goog200-data-plotted-in-figure-3.5-includes-daily-closing-stock-price-of-google-inc-from-the-nasdaq-exchange-for-200-consecutive-trading-days-starting-on-25-february-2013." class="section level4">
 <h4>The <code>goog200</code> data, plotted in Figure 3.5, includes daily closing stock price of Google Inc from the NASDAQ exchange for 200 consecutive trading days starting on 25 February 2013.</h4>
 </div>
@@ -946,7 +946,7 @@ mse &lt;-<span class="st"> </span><span class="kw">colMeans</span>(e<span class=
 </div>
 </div>
 <div id="bibliography" class="section level3">
-<h3><strong>13.7 Bibliography</strong></h3>
+<h3><strong>13.10 Bibliography</strong></h3>
 <div id="armstrong-j.-s.-1978.-long-range-forecasting-from-crystal-ball-to-computer.-john-wiley-sons." class="section level4">
 <h4>Armstrong, J. S. (1978). Long-range forecasting: From crystal ball to computer. John Wiley &amp; Sons.</h4>
 </div>
@@ -1193,7 +1193,7 @@ Multiplier
 </div>
 </div>
 <div id="prediction-intervals-from-bootstrapped-residuals" class="section level3">
-<h3><strong>14.3 Prediction intervals from bootstrapped residuals</strong></h3>
+<h3><strong>14.4 Prediction intervals from bootstrapped residuals</strong></h3>
 <div id="when-a-normal-distribution-for-the-forecast-errors-is-an-unreasonable-assumption-one-alternative-is-to-use-bootstrapping-which-only-assumes-that-the-forecast-errors-are-uncorrelated." class="section level4">
 <h4>When a normal distribution for the forecast errors is an unreasonable assumption, one alternative is to use bootstrapping, which only assumes that the forecast errors are uncorrelated.</h4>
 </div>
@@ -1225,16 +1225,16 @@ Multiplier
 <h4>To generate such intervals, we can simply add the bootstrap argument to our forecasting functions. For example:</h4>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">naive</span>(goog200, <span class="dt">bootstrap=</span><span class="ot">TRUE</span>)</code></pre></div>
 <pre><code>##     Point Forecast    Lo 80    Hi 80    Lo 95    Hi 95
-## 201       531.4783 526.0787 537.4795 523.2322 541.0612
-## 202       531.4783 523.5025 539.3092 520.0813 545.0285
-## 203       531.4783 521.4265 541.2139 516.5280 549.5581
-## 204       531.4783 519.5786 542.6498 514.6264 552.5106
-## 205       531.4783 518.0506 544.2578 512.0609 558.0741
-## 206       531.4783 516.5359 546.0434 509.7880 577.2843
-## 207       531.4783 515.1492 547.0303 507.9350 583.2203
-## 208       531.4783 513.7909 548.5656 506.1107 583.3133
-## 209       531.4783 512.9389 549.8701 504.0793 585.9591
-## 210       531.4783 511.7191 551.2327 503.2463 586.9788</code></pre>
+## 201       531.4783 525.6415 537.6557 522.8646 541.0612
+## 202       531.4783 523.0834 539.8905 519.4057 545.8037
+## 203       531.4783 520.9972 541.2804 516.3046 549.6857
+## 204       531.4783 519.2607 542.8170 514.0545 554.8568
+## 205       531.4783 517.6365 544.2817 511.7980 559.9595
+## 206       531.4783 516.2874 545.1293 509.7513 577.6270
+## 207       531.4783 515.3403 546.4171 507.8175 580.6873
+## 208       531.4783 513.7468 548.1036 505.7513 583.7706
+## 209       531.4783 512.7774 549.5497 503.7395 585.4748
+## 210       531.4783 510.9104 551.3580 502.6757 586.9403</code></pre>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="co">#&gt;     Point Forecast Lo 80 Hi 80 Lo 95 Hi 95</span>
 <span class="co">#&gt; 201          531.5 525.6 537.8 522.9 541.1</span>
 <span class="co">#&gt; 202          531.5 523.0 539.4 519.5 546.2</span>
@@ -1252,7 +1252,7 @@ Multiplier
 </div>
 </div>
 <div id="prediction-intervals-with-transformations" class="section level3">
-<h3><strong>14.4 Prediction intervals with transformations</strong></h3>
+<h3><strong>14.5 Prediction intervals with transformations</strong></h3>
 <div id="if-a-transformation-has-been-used-then-the-prediction-interval-should-be-computed-on-the-transformed-scale-and-the-end-points-back-transformed-to-give-a-prediction-interval-on-the-original-scale.-this-approach-preserves-the-probability-coverage-of-the-prediction-interval-although-it-will-no-longer-be-symmetric-around-the-point-forecast." class="section level4">
 <h4>If a transformation has been used, then the prediction interval should be computed on the transformed scale, and the end points back-transformed to give a prediction interval on the original scale. This approach preserves the probability coverage of the prediction interval, although it will no longer be symmetric around the point forecast.</h4>
 </div>
