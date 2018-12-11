@@ -334,3 +334,117 @@ ggAcf(y)
 ```
 
 
+## Exercices
+
+
+
+### 1. Use the help function to explore what the series gold, woolyrnq and gas represent.
+
+```{r}
+help(gold)
+help(woolyrnq)
+help(gas)
+```
+
+
+#### a. Use autoplot() to plot each of these in separate plots.
+
+
+```{r}
+autoplot(gold)
+autoplot(woolyrnq)
+autoplot(gas)
+```
+
+
+#### What is the frequency of each series? Hint: apply the frequency() function.
+
+
+```{r}
+print("Frequency")
+print("gold")
+frequency(gold)
+print("woolyrnq")
+frequency(woolyrnq)
+print("gas")
+frequency(gas)
+```
+
+
+
+#### Use which.max() to spot the outlier in the gold series. Which observation was it?
+
+
+```{r}
+print("When gold got maximum value?")
+which.max(gold)
+print("What was the gold's maximum value?")
+gold[which.max(gold)]
+```
+
+
+#### 2. Download the file tute1.csv from the book website, open it in Excel (or some other spreadsheet application), and review its contents. You should find four columns of information. Columns B through D each contain a quarterly series, labelled Sales, AdBudget and GDP. Sales contains the quarterly sales for a small company over the period 1981-2005. AdBudget is the advertising budget and GDP is the gross domestic product. All series have been adjusted for inflation.
+
+
+#### a. You can read the data into R with the following script:
+
+
+```{r}
+tute1 <- read.csv("./tute1.csv", header=TRUE)
+View(tute1)
+```
+
+
+#### b. Convert the data to time series
+
+
+```{r}
+mytimeseries <- ts(tute1[,-1], start=1981, frequency=4)
+```
+
+
+# c. Construct time series plots of each of the three series
+
+
+```{r}
+autoplot(mytimeseries, facets=TRUE)
+autoplot(mytimeseries)
+```
+
+
+
+#### 3. Download some monthly Australian retail data from the book website. These represent retail sales in various categories for different Australian states, and are stored in a MS-Excel file.
+
+
+#### a. You can read the data into R with the following script:
+
+
+```{r}
+retaildata <- readxl::read_excel("retail.xlsx", skip=1)
+```
+
+
+#### The second argument (skip=1) is required because the Excel sheet has two header rows.
+
+
+#### b. Select one of the time series as follows (but replace the column name with your own chosen column):
+
+
+```{r}
+myts <- ts(retaildata[,"A3349873A"],
+  frequency=12, start=c(1982,4))
+```
+
+
+#### c. Explore your chosen retail time series using the following functions: autoplot(), ggseasonplot(), ggsubseriesplot(), gglagplot(), ggAcf().
+#### Can you spot any seasonality, cyclicity and trend? What do you learn about the series?
+
+
+```{r}
+autoplot(myts)
+ggseasonplot(myts)
+ggsubseriesplot(myts)
+gglagplot(myts, lags = 12)
+ggAcf(myts)
+```
+
