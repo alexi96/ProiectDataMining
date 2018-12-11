@@ -858,3 +858,64 @@ forecast(ausbeer, h=4)
 
 #### That works quite well if you have no idea what sort of model to use. But by the end of this book, you should not need to use ```forecast()``` in this “blind” fashion. Instead, you will fit a model appropriate to the data, and then use ```forecast()``` to produce forecasts from that model.
 
+## Exercices
+
+#### 1. For the following series, find an appropriate Box-Cox transformation in order to stabilize the variance.
+
+```{r echo=FALSE, message=FALSE, warning=FALSE, Question1}
+# - usnetelec
+lambda_usnetelec <- BoxCox.lambda(usnetelec)
+print(c("Good value of lambda for usnetelec: ", 
+        lambda_usnetelec))
+autoplot(BoxCox(usnetelec, lambda_usnetelec))
+# - usgdp
+lambda_usgdp <- BoxCox.lambda(usgdp)
+print(c("Good value of lambda for usgdp: ", 
+      lambda_usgdp))
+autoplot(BoxCox(usgdp, lambda_usgdp))
+# - mcopper
+lambda_mcopper <- BoxCox.lambda(mcopper)
+print(c("Good value of lambda for mcopper: ", 
+      lambda_mcopper))
+autoplot(BoxCox(mcopper, lambda_mcopper))
+# - enplanements
+lambda_enplanements <- BoxCox.lambda(enplanements)
+print(c("Good value of lambda for enplanements: ", 
+      lambda_enplanements))
+autoplot(BoxCox(enplanements, lambda_enplanements))
+```
+
+
+2. Why is a Box-Cox transformation unhelpful for the cangas data?
+
+```{r echo=FALSE, message=FALSE, warning=FALSE, Question2}
+autoplot(cangas)
+lambda_cangas <- BoxCox.lambda(cangas)
+autoplot(BoxCox(cangas, lambda_cangas))
+# can see that Box-Cox transformation doesn't yield simpler model
+```
+
+3. What Box-Cox transformation would you select for your retail data (from Exercise 3 in Section 2.10)?
+
+```{r echo=FALSE, message=FALSE, warning=FALSE, Question3}
+retaildata <- xlsx::read.xlsx("retail.xlsx", sheetIndex = 1, startRow = 2)
+myts <- ts(retaildata[,"A3349873A"], frequency=12, start=c(1982,4))
+lambda_retail <- BoxCox.lambda(myts)
+print(c("selected lambda:", lambda_retail))
+fc_retail <- rwf(myts, 
+                 drift = TRUE, 
+                 lambda = lambda_retail,
+                 h = 50,
+                 level = 80)
+fc_retail_biasadj <- rwf(myts, 
+                         drift = TRUE, 
+                         lambda = lambda_retail,
+                         h = 50,
+                         level = 80,
+                         biasadj = TRUE)
+autoplot(myts) +
+  autolayer(fc_retail, series = "Drift method with Box-Cox Transformation") +
+  autolayer(fc_retail_biasadj$mean, series = "Bias Adjusted") +
+  guides(colour = guide_legend(title = "Forecast"))
+# It would be better to choose bias adjusted Box-Cox Transformation with lambda = 0.128
+```
