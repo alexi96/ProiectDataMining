@@ -1,0 +1,607 @@
+---
+title: "Time series I: EDA"
+author: Radu Ioan-Alexandru (Gr 405) Stefan Eva (Gr 405)
+date: "\t `r format(Sys.time(), '%d %B %Y')`"
+output: slidy_presentation
+---
+
+```{r setup, include = FALSE}
+knitr::opts_chunk$set(include = TRUE, echo = TRUE)
+library(forecast)
+library(fpp2)
+```
+## Structure
+
+**1. Defining a ```ts``` object**
+
+*a) using the **ts** function*
+
+**2. Time plots**
+
+**3. Time series patterns**
+
+*3.1 Trend:*
+
+*3.2 Seasonal:*
+
+*3.3 Cyclic:*
+
+**4.Seasonal plots**
+
+**5.Seasonal subseries plots**
+
+**6. Scatterplots**
+
+*6.1. Correlation*
+
+*6.2. Scatterplot matrices*
+
+**7. Lag plots**
+
+**8. Autocorellation**
+
+*8.1. Trend and seasonality in ACF plots*
+
+**9. White noise**
+
+**10. Some simple forecasting methods**
+
+*10.1. Average method*
+
+*10.2. Naive method*
+
+*10.3. Seasonal naive method*
+
+*10.4. Drift method*
+
+*10.5. Examples*
+
+**11. Transformations and adjustments**
+
+*11.1 Calendar adjustments*
+
+*11.2 Population adjustments*
+
+*11.3 Population adjustments*
+
+*11.4 Inflation adjustments*
+
+*11.5 Mathematical transformations*
+
+*11.6 Features of power transformations*
+
+*11.7 Bias adjustments*
+
+**12. Residual diagnostics**
+
+*12.1 Fitted values*
+
+*12.2 Residuals*
+
+*12.3 Example: Forecasting the Google daily closing stock price*
+
+*12.4 Portmanteau tests for autocorrelation*
+
+**13. Evaluating forecast accuracy**
+
+*13.1 Training and test sets*
+
+*13.2 Functions to subset a time series*
+
+*13.3 Forecast errors*
+
+*13.4 Scale-dependent errors*
+
+*13.5 Percentage errors*
+
+*13.6 Examples*
+
+*13.7 Time series cross-validation*
+
+*13.8 Pipe operator*
+
+*13.9 Example: using tsCV()*
+
+*13.10 Bibliography*
+
+**14. Prediction intervals**
+
+*14.1 One-step prediction intervals*
+
+*14.2 Multi-step prediction intervals*
+
+*14.3 Benchmark methods*
+
+*14.4 Prediction intervals from bootstrapped residuals*
+
+*14.5 Prediction intervals with transformations*
+
+**15. The forecast package in R**
+
+*15.1 Functions that output a forecast object:*
+
+*15.2 ```forecast()``` function*
+
+## 10. Some simple forecasting methods
+
+#### Some forecasting methods are extremely simple and surprisingly effective.
+
+1. **Average method**
+2. **Naïve method**
+3. **Seasonal naïve method**
+4. **Drift method**
+
+## **10.1. Average method**
+
+#### Here, the forecasts of all future values are equal to the average (or "mean") of the historical data. If we let the historical data be denoted by $y_{1},\dots,y_{T}$, then we can write the forecasts as 
+
+<center>
+$\hat{y}_{T+h|T} = \bar{y} = (y_{1}+\dots+y_{T})/T.$
+</center>
+
+#### The notation $\hat{y}_{T+h|T}$ is a short-hand for the estimate of $y_{T+h}$ based on the data $y_1,\dots,y_T$.
+
+```{r}
+y <- ts(c(123,39,78,52,110), start=2012) # y contains the time series
+h = 10 # h is the forecast horizon
+meanf(y, h)
+```
+
+## **10.2. Naïve method**
+
+#### For naïve forecasts, we simply set all forecasts to be the value of the last observation. That is, 
+<center>
+$\hat{y}_{T+h|T} = y_{T}.$
+</center>
+
+#### This method works remarkably well for many economic and financial time series.
+
+```{r}
+y <- ts(c(123,39,78,52,110), start=2012) # y contains the time series
+h = 10 # h is the forecast horizon
+naive(y, h)
+rwf(y, h) # Equivalent alternative
+```
+
+#### Because a naïve forecast is optimal when data follow a random walk (see Section 8.1), these are also called random **walk forecasts.**
+
+## **10.3. Seasonal naïve method**
+
+#### A similar method is useful for highly seasona l data. In this case, we set each forecast to be equal to the last observed value from the same season of the year (e.g., the same month of the previous year). Formally, the forecast for time $T+h$ is written as
+
+<center>
+$\hat{y}_{T+h|T} = y_{T+h-m(k+1)},$
+</center>
+
+#### where $m=$ the seasonal period, and $k$ is the integer part of $(h−1)/m$ (i.e., the number of complete years in the forecast period prior to time $T+h$). This looks more complicated than it really is. For example, with monthly data, the forecast for all future February values is equal to the last observed February value. With quarterly data, the forecast of all future Q2 values is equal to the last observed Q2 value (where Q2 means the second quarter). Similar rules apply for other months and quarters, and for other seasonal periods.
+
+```{r}
+y <- ts(c(123,39,78,52,110), start=2012) # y contains the time series
+h = 10 # h is the forecast horizon
+snaive(y, h)
+```
+
+## **10.4. Drift method**
+
+#### A variation on the naïve method is to allow the forecasts to increase or decrease over time, where the amount of change over time (called the **drift**) is set to be the average change seen in the historical data. Thus the forecast for time $T+h$ is given by 
+
+<center>
+$\hat{y}_{T+h|T} = y_{T} + \frac{h}{T-1}\sum_{t=2}^T (y_{t}-y_{t-1}) = y_{T} + h \left( \frac{y_{T} -y_{1}}{T-1}\right).$
+</center>
+
+#### This is equivalent to drawing a line between the first and last observations, and extrapolating it into the future.
+
+```{r}
+y <- ts(c(123,39,78,52,110), start=2012) # y contains the time series
+h = 10 # h is the forecast horizon
+rwf(y, h, drift=TRUE)
+```
+
+## Examples
+
+#### The Figure bellow shows the first three methods applied to the quarterly beer production data.
+
+```{r}
+# Set training data from 1992 to 2007
+beer2 <- window(ausbeer,start=1992,end=c(2007,4))
+# Plot some forecasts
+autoplot(beer2) +
+  autolayer(meanf(beer2, h=11),
+    series="Mean", PI=FALSE) +
+  autolayer(naive(beer2, h=11),
+    series="Naïve", PI=FALSE) +
+  autolayer(snaive(beer2, h=11),
+    series="Seasonal naïve", PI=FALSE) +
+  ggtitle("Forecasts for quarterly beer production") +
+  xlab("Year") + ylab("Megalitres") +
+  guides(colour=guide_legend(title="Forecast"))
+```
+
+#### The Figure bellow, the non-seasonal methods are applied to a series of 200 days of the Google daily closing stock price.
+
+```{r}
+autoplot(goog200) +
+  autolayer(meanf(goog200, h=40),
+    series="Mean", PI=FALSE) +
+  autolayer(rwf(goog200, h=40),
+    series="Naïve", PI=FALSE) +
+  autolayer(rwf(goog200, drift=TRUE, h=40),
+    series="Drift", PI=FALSE) +
+  ggtitle("Google stock (daily ending 6 Dec 2013)") +
+  xlab("Day") + ylab("Closing Price (US$)") +
+  guides(colour=guide_legend(title="Forecast"))
+```
+
+#### Sometimes one of these simple methods will be the best forecasting method available; but in many cases, these methods will serve as benchmarks rather than the method of choice. That is, any forecasting methods we develop will be compared to these simple methods to ensure that the new method is better than these simple alternatives. If not, the new method is not worth considering.
+
+## 11. Transformations and adjustments
+
+### **11.1 Calendar adjustments**
+
+### Some of the variation seen in seasonal data may be due to simple calendar effects. In such cases, it is usually much easier to remove the variation before fitting a forecasting model. The ```monthdays()``` function will compute the number of days in each month or quarter.
+
+### For example, if you are studying the monthly milk production on a farm, there will be variation between the months simply because of the different numbers of days in each month, in addition to the seasonal variation across the year.
+
+```{r}
+dframe <- cbind(Monthly = milk,
+                DailyAverage = milk/monthdays(milk))
+  autoplot(dframe, facet=TRUE) +
+    xlab("Years") + ylab("Pounds") +
+    ggtitle("Milk production per cow")
+```
+
+### **11.2 Population adjustments**
+
+#### Any data that are affected by population changes can be adjusted to give per-capita data. That is, consider the data per person (or per thousand people, or per million people) rather than the total. For example, if you are studying the number of hospital beds in a particular region over time, the results are much easier to interpret if you remove the effects of population changes by considering the number of beds per thousand people. Then you can see whether there have been real increases in the number of beds, or whether the increases are due entirely to population increases. It is possible for the total number of beds to increase, but the number of beds per thousand people to decrease. This occurs when the population is increasing faster than the number of hospital beds. For most data that are affected by population changes, it is best to use per-capita data rather than the totals.
+
+### **11.3 Inflation adjustments**
+
+#### Data which are affected by the value of money are best adjusted before modelling. For example, the average cost of a new house will have increased over the last few decades due to inflation. A $200,000 house this year is not the same as a $200,000 house twenty years ago. For this reason, financial time series are usually adjusted so that all values are stated in dollar values from a particular year. For example, the house price data may be stated in year 2000 dollars.
+
+### **11.4 Mathematical transformations**
+
+#### A useful family of transformations, that includes both logarithms and power transformations, is the family of Box-Cox transformations, which depend on the parameter λ and are defined as follows: 
+
+<center>
+$w_t  =
+    \begin{cases}
+      \log(y_t) & \text{if $\lambda=0$};  \\
+      (y_t^\lambda-1)/\lambda & \text{otherwise}.
+    \end{cases}$
+</center>
+
+#### The logarithm in a Box-Cox transformation is always a natural logarithm (i.e., to base e). So if λ=0, natural logarithms are used, but if λ≠0, a power transformation is used, followed by some simple scaling.
+
+## 12. Residual diagnostics
+
+### **12.1 Fitted values**
+
+#### Each observation in a time series can be forecast using all previous observations. We call these **fitted values** and they are denoted by $\hat{y}_{t|t-1}$, meaning the forecast of $y_t$ based on observations $y_{1},\dots,y_{t-1}$. We use these so often, we sometimes drop part of the subscript and just write $\hat{y}_t$ instead of $\hat{y}_{t|t-1}$. Fitted values always involve one-step forecasts.
+
+### **12.2 Residuals**
+
+#### The “residuals” in a time series model are what is left over after fitting a model. For many (but not all) time series models, the residuals are equal to the difference between the observations and the corresponding fitted values: 
+
+<center>
+$e_{t} = y_{t}-\hat{y}_{t}.$ 
+</center>
+
+#### Residuals are useful in checking whether a model has adequately captured the information in the data. A good forecasting method will yield residuals with the following properties:
+
+1. #### The residuals are uncorrelated. If there are correlations between residuals, then there is information left in the residuals which should be used in computing forecasts.
+
+2. #### The residuals have zero mean. If the residuals have a mean other than zero, then the forecasts are biased.
+
+### **12.3 Example: Forecasting the Google daily closing stock price**
+
+#### For stock market prices and indexes, the best forecasting method is often the naïve method. That is, each forecast is simply equal to the last observed value, or $\hat{y}_{t} = y_{t-1}$. Hence, the residuals are simply equal to the difference between consecutive observations:
+
+<center>
+$e_{t} = y_{t} - \hat{y}_{t} = y_{t} - y_{t-1}.$
+</center>
+
+#### The following graph shows the Google daily closing stock price (GOOG). The large jump at day 166 corresponds to 18 October 2013 when the price jumped 12% due to unexpectedly strong third quarter results.
+
+```{r}
+autoplot(goog200) +
+  xlab("Day") + ylab("Closing Price (US$)") +
+  ggtitle("Google Stock (daily ending 6 December 2013)")
+```
+
+#### The residuals obtained from forecasting this series using the naïve method are shown above. The large positive residual is a result of the unexpected price jump at day 166.
+
+```{r}
+res <- residuals(naive(goog200))
+autoplot(res) + xlab("Day") + ylab("") +
+  ggtitle("Residuals from naïve method")
+```
+
+```{r}
+gghistogram(res) + ggtitle("Histogram of residuals")
+```
+
+```{r}
+ggAcf(res) + ggtitle("ACF of residuals")
+```
+
+#### These graphs show that the naïve method produces forecasts that appear to account for all available information. The mean of the residuals is close to zero and there is no significant correlation in the residuals series. The time plot of the residuals shows that the variation of the residuals stays much the same across the historical data, apart from the one outlier, and therefore the residual variance can be treated as constant. This can also be seen on the histogram of the residuals. The histogram suggests that the residuals may not be normal — the right tail seems a little too long, even when we ignore the outlier. Consequently, forecasts from this method will probably be quite good, but prediction intervals that are computed assuming a normal distribution may be inaccurate.
+
+## 13. Evaluating forecast accuracy
+
+### **13.1 Functions to subset a time series**
+
+#### The ```window()``` function introduced in Chapter 2 is useful when extracting a portion of a time series, such as we need when creating training and test sets. In the ```window()``` function, we specify the start and/or end of the portion of time series required using time values. For example,
+
+```{r}
+window(ausbeer, start=1995)
+```
+
+#### extracts all data from 1995 onward.
+
+#### Another useful function is subset() which allows for more types of subsetting. A great advantage of this function is that it allows the use of indices to choose a subset. For example,
+
+```{r}
+subset(ausbeer, start=length(ausbeer)-4*5)
+```
+
+#### extracts the last 5 years of observations from ```ausbeer```. It also allows extracting all values for a specific season. For example,
+
+```{r}
+subset(ausbeer, quarter = 1)
+```
+
+#### extracts the first quarters for all years.
+
+#### Finally, ```head``` and ```tail``` are useful for extracting the first few or last few observations. For example, the last 5 years of ```ausbeer``` can also be obtained using
+
+```{r}
+tail(ausbeer, 4*5)
+```
+
+### **13.2 Forecast errors**
+
+#### The ```window()``` function introduced in Chapter 2 is useful when extracting a portion of a time series, such as we need when creating training and test sets. In the ```window()``` function, we specify the start and/or end of the portion of time series required using time values. For example,
+
+```{r}
+window(ausbeer, start=1995)
+```
+
+#### extracts all data from 1995 onward.
+
+#### Another useful function is subset() which allows for more types of subsetting. A great advantage of this function is that it allows the use of indices to choose a subset. For example,
+
+```{r}
+subset(ausbeer, start=length(ausbeer)-4*5)
+```
+
+#### extracts the last 5 years of observations from ```ausbeer```. It also allows extracting all values for a specific season. For example,
+
+```{r}
+subset(ausbeer, quarter = 1)
+```
+
+#### extracts the first quarters for all years.
+
+#### Finally, ```head``` and ```tail``` are useful for extracting the first few or last few observations. For example, the last 5 years of ```ausbeer``` can also be obtained using
+
+```{r}
+tail(ausbeer, 4*5)
+```
+
+## **Examples**
+
+```{r}
+beer2 <- window(ausbeer,start=1992,end=c(2007,4))
+beerfit1 <- meanf(beer2,h=10)
+beerfit2 <- rwf(beer2,h=10)
+beerfit3 <- snaive(beer2,h=10)
+autoplot(window(ausbeer, start=1992)) +
+  autolayer(beerfit1, series="Mean", PI=FALSE) +
+  autolayer(beerfit2, series="Naïve", PI=FALSE) +
+  autolayer(beerfit3, series="Seasonal naïve", PI=FALSE) +
+  xlab("Year") + ylab("Megalitres") +
+  ggtitle("Forecasts for quarterly beer production") +
+  guides(colour=guide_legend(title="Forecast"))
+```
+
+#### The figure above shows three forecast methods applied to the quarterly Australian beer production using data only to the end of 2007. The actual values for the period 2008–2010 are also shown. We compute the forecast accuracy measures for this period.
+
+```{r}
+beer3 <- window(ausbeer, start=2008)
+accuracy(beerfit1, beer3)
+accuracy(beerfit2, beer3)
+accuracy(beerfit3, beer3)
+```
+
+#### It is obvious from the graph that the seasonal naïve method is best for these data, although it can still be improved, as we will discover later. Sometimes, different accuracy measures will lead to different results as to which forecast method is best. However, in this case, all of the results point to the seasonal naïve method as the best of these three methods for this data set.
+
+#### To take a non-seasonal example, consider the Google stock price. The following graph shows the 200 observations ending on 6 Dec 2013, along with forecasts of the next 40 days obtained from three different methods.
+
+```{r}
+googfc1 <- meanf(goog200, h=40)
+googfc2 <- rwf(goog200, h=40)
+googfc3 <- rwf(goog200, drift=TRUE, h=40)
+autoplot(subset(goog, end = 240)) +
+  autolayer(googfc1, PI=FALSE, series="Mean") +
+  autolayer(googfc2, PI=FALSE, series="Naïve") +
+  autolayer(googfc3, PI=FALSE, series="Drift") +
+  xlab("Day") + ylab("Closing Price (US$)") +
+  ggtitle("Google stock price (daily ending 6 Dec 13)") +
+  guides(colour=guide_legend(title="Forecast"))
+```
+
+```{r}
+googtest <- window(goog, start=201, end=240)
+accuracy(googfc1, googtest)
+accuracy(googfc2, googtest)
+accuracy(googfc3, googtest)
+```
+
+#### Here, the best method is the drift method (regardless of which accuracy measure is used).
+
+## 13. Evaluating forecast accuracy (cont'd)
+
+### **13.3 Pipe operator**
+
+####The ugliness of the above R code makes this a good opportunity to introduce some alternative ways of stringing R functions together. In the above code, we are nesting functions within functions within functions, so you have to read the code from the inside out, making it difficult to understand what is being computed. Instead, we can use the pipe operator ```%>%``` as follows.
+
+```{r}
+goog200 %>% tsCV(forecastfunction=rwf, drift=TRUE, h=1) -> e
+e^2 %>% mean(na.rm=TRUE) %>% sqrt()
+#> [1] 6.233
+goog200 %>% rwf(drift=TRUE) %>% residuals() -> res
+res^2 %>% mean(na.rm=TRUE) %>% sqrt()
+#> [1] 6.169
+```
+
+#### The left hand side of each pipe is passed as the first argument to the function on the right hand side. This is consistent with the way we read from left to right in English. When using pipes, all other arguments must be named, which also helps readability. When using pipes, it is natural to use the right arrow assignment ```->``` rather than the left arrow. For example, the third line above can be read as “Take the ```goog200``` series, pass it to ```rwf()``` with ```drift=TRUE```, compute the resulting residuals, and store them as ```res```”.
+
+#### We will use the pipe operator whenever it makes the code easier to read. In order to be consistent, we will always follow a function with parentheses to differentiate it from other objects, even if it has no arguments. See, for example, the use of ```sqrt()``` and ```residuals()``` in the code above.
+
+## **13.4 Example: using tsCV()**
+
+#### The ```goog200``` data includes daily closing stock price of Google Inc from the NASDAQ exchange for 200 consecutive trading days starting on 25 February 2013.
+
+#### The code below evaluates the forecasting performance of 1- to 8-step-ahead naïve forecasts with ```tsCV()```, using MSE as the forecast error measure. The plot shows that the forecast error increases as the forecast horizon increases, as we would expect.
+
+```{r}
+e <- tsCV(goog200, forecastfunction=naive, h=8)
+# Compute the MSE values and remove missing values
+mse <- colMeans(e^2, na.rm = T)
+# Plot the MSE values against the forecast horizon
+data.frame(h = 1:8, MSE = mse) %>%
+  ggplot(aes(x = h, y = MSE)) + geom_point()
+```
+
+## 14. Prediction intervals
+
+### **14.1 Benchmark methods**
+
+#### Prediction intervals will be computed for you when using any of the benchmark forecasting methods. For example, here is the output when using the naïve method for the Google stock price.
+
+```{r}
+naive(goog200)
+#>     Point Forecast Lo 80 Hi 80 Lo 95 Hi 95
+#> 201          531.5 523.5 539.4 519.3 543.6
+#> 202          531.5 520.2 542.7 514.3 548.7
+#> 203          531.5 517.7 545.3 510.4 552.6
+#> 204          531.5 515.6 547.4 507.1 555.8
+#> 205          531.5 513.7 549.3 504.3 558.7
+#> 206          531.5 512.0 551.0 501.7 561.3
+#> 207          531.5 510.4 552.5 499.3 563.7
+#> 208          531.5 509.0 554.0 497.1 565.9
+#> 209          531.5 507.6 555.3 495.0 568.0
+#> 210          531.5 506.3 556.6 493.0 570.0
+```
+
+#### When plotted, the prediction intervals are shown as shaded region, with the strength of colour indicating the probability associated with the interval.
+
+```{r}
+autoplot(naive(goog200))
+```
+
+### **14.2 Prediction intervals from bootstrapped residuals**
+
+#### To generate such intervals, we can simply add the bootstrap argument to our forecasting functions. For example:
+
+```{r}
+naive(goog200, bootstrap=TRUE)
+#>     Point Forecast Lo 80 Hi 80 Lo 95 Hi 95
+#> 201          531.5 525.6 537.8 522.9 541.1
+#> 202          531.5 523.0 539.4 519.5 546.2
+#> 203          531.5 521.0 541.6 516.6 552.1
+#> 204          531.5 519.4 543.4 514.1 566.7
+#> 205          531.5 517.6 544.8 511.8 581.7
+#> 206          531.5 516.2 546.8 509.8 583.4
+#> 207          531.5 514.8 547.6 507.3 584.5
+#> 208          531.5 513.2 549.5 505.8 587.7
+#> 209          531.5 512.2 550.4 503.7 589.2
+#> 210          531.5 510.7 551.7 502.1 591.3
+```
+
+#### In this case, they are similar (but not identical) to the prediction intervals based on the normal distribution.
+
+## 15. The forecast package in R
+
+### **15.1 ```forecast()``` function**
+
+#### So far we have used functions which produce a ```forecast``` object directly. But a more common approach, which we will focus on in the rest of the book, will be to fit a model to the data, and then use the ```forecast()``` function to produce forecasts from that model.
+
+#### The ```forecast()``` function works with many different types of inputs. It generally takes a time series or time series model as its main argument, and produces forecasts appropriately. It always returns objects of class ```forecast```.
+
+#### If the first argument is of class ```ts```, it returns forecasts from the automatic ETS algorithm discussed in Chapter 7.
+
+#### Here is a simple example, applying ```forecast()``` to the ```ausbeer``` data:
+
+```{r}
+forecast(ausbeer, h=4)
+#>         Point Forecast Lo 80 Hi 80 Lo 95 Hi 95
+#> 2010 Q3          404.6 385.9 423.3 376.0 433.3
+#> 2010 Q4          480.4 457.5 503.3 445.4 515.4
+#> 2011 Q1          417.0 396.5 437.6 385.6 448.4
+#> 2011 Q2          383.1 363.5 402.7 353.1 413.1
+```
+
+#### That works quite well if you have no idea what sort of model to use. But by the end of this book, you should not need to use ```forecast()``` in this “blind” fashion. Instead, you will fit a model appropriate to the data, and then use ```forecast()``` to produce forecasts from that model.
+
+## Exercices
+
+1. For the following series, find an appropriate Box-Cox transformation in order to stabilize the variance.
+
+```{r echo=FALSE, message=FALSE, warning=FALSE, Question1}
+# - usnetelec
+lambda_usnetelec <- BoxCox.lambda(usnetelec)
+print(c("Good value of lambda for usnetelec: ", 
+        lambda_usnetelec))
+autoplot(BoxCox(usnetelec, lambda_usnetelec))
+# - usgdp
+lambda_usgdp <- BoxCox.lambda(usgdp)
+print(c("Good value of lambda for usgdp: ", 
+      lambda_usgdp))
+autoplot(BoxCox(usgdp, lambda_usgdp))
+# - mcopper
+lambda_mcopper <- BoxCox.lambda(mcopper)
+print(c("Good value of lambda for mcopper: ", 
+      lambda_mcopper))
+autoplot(BoxCox(mcopper, lambda_mcopper))
+# - enplanements
+lambda_enplanements <- BoxCox.lambda(enplanements)
+print(c("Good value of lambda for enplanements: ", 
+      lambda_enplanements))
+autoplot(BoxCox(enplanements, lambda_enplanements))
+```
+
+
+2. Why is a Box-Cox transformation unhelpful for the cangas data?
+
+```{r echo=FALSE, message=FALSE, warning=FALSE, Question2}
+autoplot(cangas)
+lambda_cangas <- BoxCox.lambda(cangas)
+autoplot(BoxCox(cangas, lambda_cangas))
+# can see that Box-Cox transformation doesn't yield simpler model
+```
+
+3. What Box-Cox transformation would you select for your retail data (from Exercise 3 in Section 2.10)?
+
+```{r echo=FALSE, message=FALSE, warning=FALSE, Question3}
+retaildata <- xlsx::read.xlsx("retail.xlsx", sheetIndex = 1, startRow = 2)
+myts <- ts(retaildata[,"A3349873A"], frequency=12, start=c(1982,4))
+lambda_retail <- BoxCox.lambda(myts)
+print(c("selected lambda:", lambda_retail))
+fc_retail <- rwf(myts, 
+                 drift = TRUE, 
+                 lambda = lambda_retail,
+                 h = 50,
+                 level = 80)
+fc_retail_biasadj <- rwf(myts, 
+                         drift = TRUE, 
+                         lambda = lambda_retail,
+                         h = 50,
+                         level = 80,
+                         biasadj = TRUE)
+autoplot(myts) +
+  autolayer(fc_retail, series = "Drift method with Box-Cox Transformation") +
+  autolayer(fc_retail_biasadj$mean, series = "Bias Adjusted") +
+  guides(colour = guide_legend(title = "Forecast"))
+# It would be better to choose bias adjusted Box-Cox Transformation with lambda = 0.128
+```

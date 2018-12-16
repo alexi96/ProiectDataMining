@@ -22,7 +22,7 @@ library(fpp2)
 
 ### **10.1. Average method**
 
-#### Here, the forecasts of all future values are equal to the average (or “mean”) of the historical data. If we let the historical data be denoted by $y_{1},\dots,y_{T}$, then we can write the forecasts as 
+#### Here, the forecasts of all future values are equal to the average (or "mean") of the historical data. If we let the historical data be denoted by $y_{1},\dots,y_{T}$, then we can write the forecasts as 
 
 <center>
 $\hat{y}_{T+h|T} = \bar{y} = (y_{1}+\dots+y_{T})/T.$
@@ -35,6 +35,7 @@ y <- ts(c(123,39,78,52,110), start=2012) # y contains the time series
 h = 10 # h is the forecast horizon
 meanf(y, h)
 ```
+
 ### **10.2. Naïve method**
 
 #### For naïve forecasts, we simply set all forecasts to be the value of the last observation. That is, 
@@ -51,11 +52,11 @@ naive(y, h)
 rwf(y, h) # Equivalent alternative
 ```
 
-####Because a naïve forecast is optimal when data follow a random walk (see Section 8.1), these are also called random **walk forecasts.**
+#### Because a naïve forecast is optimal when data follow a random walk (see Section 8.1), these are also called random **walk forecasts.**
 
 ### **10.3. Seasonal naïve method**
 
-####  similar method is useful for highly seasona l data. In this case, we set each forecast to be equal to the last observed value from the same season of the year (e.g., the same month of the previous year). Formally, the forecast for time $T+h$ is written as
+#### A similar method is useful for highly seasona l data. In this case, we set each forecast to be equal to the last observed value from the same season of the year (e.g., the same month of the previous year). Formally, the forecast for time $T+h$ is written as
 
 <center>
 $\hat{y}_{T+h|T} = y_{T+h-m(k+1)},$
@@ -142,15 +143,13 @@ dframe <- cbind(Monthly = milk,
 
 #### Any data that are affected by population changes can be adjusted to give per-capita data. That is, consider the data per person (or per thousand people, or per million people) rather than the total. For example, if you are studying the number of hospital beds in a particular region over time, the results are much easier to interpret if you remove the effects of population changes by considering the number of beds per thousand people. Then you can see whether there have been real increases in the number of beds, or whether the increases are due entirely to population increases. It is possible for the total number of beds to increase, but the number of beds per thousand people to decrease. This occurs when the population is increasing faster than the number of hospital beds. For most data that are affected by population changes, it is best to use per-capita data rather than the totals.
 
-### **11.3 Population adjustments**
+### **11.3 Inflation adjustments**
 
 #### Data which are affected by the value of money are best adjusted before modelling. For example, the average cost of a new house will have increased over the last few decades due to inflation. A $200,000 house this year is not the same as a $200,000 house twenty years ago. For this reason, financial time series are usually adjusted so that all values are stated in dollar values from a particular year. For example, the house price data may be stated in year 2000 dollars.
 
-### **11.4 Inflation adjustments**
-
 #### To make these adjustments, a price index is used. If $z_{t}$ denotes the price index and $y_{t}$ denotes the original house price in year $t$, then $x_{t} = y_{t}/z_{t} * z_{2000}$ gives the adjusted house price at year 2000 dollar values. Price indexes are often constructed by government agencies. For consumer goods, a common price index is the Consumer Price Index (or CPI).
 
-### **11.5 Mathematical transformations**
+### **11.4 Mathematical transformations**
 
 #### If the data show variation that increases or decreases with the level of the series, then a transformation can be useful. For example, a logarithmic transformation is often useful. If we denote the original observations as $y_{1},\dots,y_{T}$ and the transformed observations as $w_{1}, \dots, w_{T}$, then $w_t = \log(y_t)$. Logarithms are useful because they are interpretable: changes in a log value are relative (or percentage) changes on the original scale. So if log base 10 is used, then an increase of 1 on the log scale corresponds to a multiplication of 10 on the original scale. Another useful feature of log transformations is that they constrain the forecasts to stay positive on the original scale.
 
@@ -159,21 +158,18 @@ dframe <- cbind(Monthly = milk,
 #### A useful family of transformations, that includes both logarithms and power transformations, is the family of Box-Cox transformations, which depend on the parameter λ and are defined as follows: 
 
 <center>
-![](MathematicalTransformations5.png)
+$
+  w_t  =
+    \begin{cases}
+      \log(y_t) & \text{if $\lambda=0$};  \\
+      (y_t^\lambda-1)/\lambda & \text{otherwise}.
+    \end{cases}
+$
 </center>
 
 #### The logarithm in a Box-Cox transformation is always a natural logarithm (i.e., to base e). So if λ=0, natural logarithms are used, but if λ≠0, a power transformation is used, followed by some simple scaling.
 
-#### If λ=1, then ![](MathematicalTransformations6.png), so the transformed data is shifted downwards but there is no change in the shape of the time series. But for all other values of λ, the time series will change shape.
-
-#### Use the slider below to see the effect of varying λ to transform Australian monthly electricity demand:
-
-```{r}
-(lambda <- BoxCox.lambda(elec))
-autoplot(BoxCox(elec,lambda))
-```
-
-#### A good value of λ is one which makes the size of the seasonal variation about the same across the whole series, as that makes the forecasting model simpler. In this case, λ=0.30 works quite well, although any value of λ between 0 and 0.5 would give similar results.
+#### If λ=1, then $w_t = y_t-1$, so the transformed data is shifted downwards but there is no change in the shape of the time series. But for all other values of λ, the time series will change shape.
 
 #### The ```BoxCox.lambda()``` function will choose a value of lambda for you.
 
@@ -186,7 +182,14 @@ autoplot(BoxCox(elec,lambda))
 #### Having chosen a transformation, we need to forecast the transformed data. Then, we need to reverse the transformation (or back-transform) to obtain forecasts on the original scale. The reverse Box-Cox transformation is given by 
 
 <center>
-![](MathematicalTransformations7.png)
+$\begin{equation}
+\tag{3.1}
+  y_{t} =
+    \begin{cases}
+      \exp(w_{t}) & \text{if $\lambda=0$};\\
+      (\lambda w_t+1)^{1/\lambda} & \text{otherwise}.
+    \end{cases}
+\end{equation}$
 </center>
 
 ### **11.6 Features of power transformations**
@@ -204,7 +207,16 @@ autoplot(BoxCox(elec,lambda))
 #### For a Box-Cox transformation, the back-transformed mean is given by 
 
 <center>
-![](BiasAdjustments1.png)
+$
+\begin{equation}
+\tag{3.2}
+y_t =
+  \begin{cases}
+     \exp(w_t)\left[1 + \frac{\sigma_h^2}{2}\right] & \text{if $\lambda=0$;}\\
+     (\lambda w_t+1)^{1/\lambda}\left[1 + \frac{\sigma_h^2(1-\lambda)}{2(\lambda w_t+1)^{2}}\right] & \text{otherwise;}
+  \end{cases}
+\end{equation}
+$
 </center>
 
 #### where ![](BiasAdjustments2.png) is the ***h***-step forecast variance. The larger the forecast variance, the bigger the difference between the mean and the median.
@@ -223,7 +235,7 @@ autoplot(eggs) +
   guides(colour=guide_legend(title="Forecast"))
 ```
 
-#### The blue line in Figure 3.4 shows the forecast medians while the red line shows the forecast means. Notice how the skewed forecast distribution pulls up the point forecast when we use the bias adjustment.
+#### The blue line in above shows the forecast medians while the red line shows the forecast means. Notice how the skewed forecast distribution pulls up the point forecast when we use the bias adjustment.
 
 #### Bias adjustment is not done by default in the **forecast** package. If you want your forecasts to be means rather than medians, use the argument ```biasadj=TRUE``` when you select your Box-Cox transformation parameter.
 
@@ -288,7 +300,7 @@ autoplot(goog200) +
   ggtitle("Google Stock (daily ending 6 December 2013)")
 ```
 
-#### The residuals obtained from forecasting this series using the naïve method are shown in Figure 3.6. The large positive residual is a result of the unexpected price jump at day 166.
+#### The residuals obtained from forecasting this series using the naïve method are shown above. The large positive residual is a result of the unexpected price jump at day 166.
 
 ```{r}
 res <- residuals(naive(goog200))
@@ -596,7 +608,7 @@ res^2 %>% mean(na.rm=TRUE) %>% sqrt()
 
 ### **13.9 Example: using tsCV()**
 
-#### The ```goog200``` data, plotted in Figure 3.5, includes daily closing stock price of Google Inc from the NASDAQ exchange for 200 consecutive trading days starting on 25 February 2013.
+#### The ```goog200``` data includes daily closing stock price of Google Inc from the NASDAQ exchange for 200 consecutive trading days starting on 25 February 2013.
 
 #### The code below evaluates the forecasting performance of 1- to 8-step-ahead naïve forecasts with ```tsCV()```, using MSE as the forecast error measure. The plot shows that the forecast error increases as the forecast horizon increases, as we would expect.
 
@@ -709,7 +721,7 @@ $\hat{y}_{T+h|T} \pm c \hat\sigma_h$
 
 #### When forecasting one step ahead, the standard deviation of the forecast distribution is almost the same as the standard deviation of the residuals. (In fact, the two standard deviations are identical if there are no parameters to be estimated, as is the case with the naïve method. For forecasting methods involving parameters to be estimated, the standard deviation of the forecast distribution is slightly larger than the residual standard deviation, although this difference is often ignored.)
 
-#### For example, consider a naïve forecast for the Google stock price data ```goog200``` (shown in Figure 3.5). The last value of the observed series is 531.48, so the forecast of the next value of the GSP is 531.48. The standard deviation of the residuals from the naïve method is 6.21. Hence, a 95% prediction interval for the next value of the GSP is 
+#### For example, consider a naïve forecast for the Google stock price data ```goog200```. The last value of the observed series is 531.48, so the forecast of the next value of the GSP is 531.48. The standard deviation of the residuals from the naïve method is 6.21. Hence, a 95% prediction interval for the next value of the GSP is 
 
 <center>
 $531.48 \pm 1.96(6.21) = [519.3, 543.6].$
@@ -860,9 +872,9 @@ forecast(ausbeer, h=4)
 
 ## Exercices
 
-#### 1. For the following series, find an appropriate Box-Cox transformation in order to stabilize the variance.
+1. For the following series, find an appropriate Box-Cox transformation in order to stabilize the variance.
 
-```{r echo=FALSE, message=FALSE, warning=FALSE, Question1}
+```{r echo=TRUE, message=FALSE, warning=FALSE, Question1}
 # - usnetelec
 lambda_usnetelec <- BoxCox.lambda(usnetelec)
 print(c("Good value of lambda for usnetelec: ", 
@@ -888,7 +900,7 @@ autoplot(BoxCox(enplanements, lambda_enplanements))
 
 2. Why is a Box-Cox transformation unhelpful for the cangas data?
 
-```{r echo=FALSE, message=FALSE, warning=FALSE, Question2}
+```{r echo=TRUE, message=FALSE, warning=FALSE, Question2}
 autoplot(cangas)
 lambda_cangas <- BoxCox.lambda(cangas)
 autoplot(BoxCox(cangas, lambda_cangas))
@@ -897,7 +909,7 @@ autoplot(BoxCox(cangas, lambda_cangas))
 
 3. What Box-Cox transformation would you select for your retail data (from Exercise 3 in Section 2.10)?
 
-```{r echo=FALSE, message=FALSE, warning=FALSE, Question3}
+```{r echo=TRUE, message=FALSE, warning=FALSE, Question3}
 retaildata <- xlsx::read.xlsx("retail.xlsx", sheetIndex = 1, startRow = 2)
 myts <- ts(retaildata[,"A3349873A"], frequency=12, start=c(1982,4))
 lambda_retail <- BoxCox.lambda(myts)
