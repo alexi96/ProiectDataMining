@@ -262,7 +262,7 @@ gglagplot(beer2)
 ## 8. Autocorelation
 
 
-#### Autocorrelation measures the linear relationship between lagged values of a time series. The value of rk can be written as:
+#### Autocorrelation measures the linear relationship between lagged values of a time series. The value of $r_{k}$ can be written as:
 
 
 <center>
