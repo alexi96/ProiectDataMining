@@ -53,11 +53,15 @@ y
 #### For time series data, the obvious graph to start with is a time plot. That is, the observations are plotted against the time of observation, with consecutive observations joined by straight lines. Figure 2.1 below shows the weekly economy passenger load on Ansett Airlines between Australia’s two largest cities.
 
 ```{r}
+
+ 
+ 
+
 library(ggplot2)
 library(fpp2)
-autoplot(melsyd[,"Economy.Class"]) +
-  ggtitle("Economy class passengers: Melbourne-Sydney") +
-  xlab("Year") +
+autoplot(melsyd[,"Economy.Class"]) + # The Autoplot() command will produces an appropriate plot of whatever is passed as its first argument.
+  ggtitle("Economy class passengers: Melbourne-Sydney") + # ggtitle() command will set the title of the graph
+  xlab("Year") + #  xlab() and ylab() commands will set the labels of the graph
   ylab("Thousands")
 ```
 
@@ -105,13 +109,13 @@ autoplot(a10) +
 ![](Figure2.3.png)
 </center>
 
-#### 1.The monthly housing sales (top left) show strong seasonality within each year, as well as some strong cyclic behaviour with a period of about 6–10 years. There is no apparent trend in the data over this period.
+#### 1. The monthly housing sales (top left) show strong seasonality within each year, as well as some strong cyclic behaviour with a period of about 6–10 years. There is no apparent trend in the data over this period.
 
-#### 2.The US treasury bill contracts (top right) show results from the Chicago market for 100 consecutive trading days in 1981. Here there is no seasonality, but an obvious downward trend. Possibly, if we had a much longer series, we would see that this downward trend is actually part of a long cycle, but when viewed over only 100 days it appears to be a trend.
+#### 2. The US treasury bill contracts (top right) show results from the Chicago market for 100 consecutive trading days in 1981. Here there is no seasonality, but an obvious downward trend. Possibly, if we had a much longer series, we would see that this downward trend is actually part of a long cycle, but when viewed over only 100 days it appears to be a trend.
 
-#### 3.The Australian quarterly electricity production (bottom left) shows a strong increasing trend, with strong seasonality. There is no evidence of any cyclic behaviour here.
+#### 3. The Australian quarterly electricity production (bottom left) shows a strong increasing trend, with strong seasonality. There is no evidence of any cyclic behaviour here.
 
-#### 4.The daily change in the Google closing stock price (bottom right) has no trend, seasonality or cyclic behaviour. There are random fluctuations which do not appear to be very predictable, and no strong patterns that would help with developing a forecasting model.
+#### 4. The daily change in the Google closing stock price (bottom right) has no trend, seasonality or cyclic behaviour. There are random fluctuations which do not appear to be very predictable, and no strong patterns that would help with developing a forecasting model.
 
 
 
@@ -123,7 +127,7 @@ autoplot(a10) +
 
 
 ``` {r}
-ggseasonplot(a10, year.labels=TRUE, year.labels.left=TRUE) +
+ggseasonplot(a10, year.labels=TRUE, year.labels.left=TRUE) + # a10 = a time series object, year.labels = a logical flag indicating wheter labels for each year of data should be plotted on the right
   ylab("$ million") +
   ggtitle("Seasonal plot: antidiabetic drug sales")
 ```
@@ -176,7 +180,7 @@ autoplot(elecdemand[,c("Demand","Temperature")], facets=TRUE) +
 
 
 ```{r}
-qplot(Temperature, Demand, data=as.data.frame(elecdemand)) +
+qplot(Temperature, Demand, data=as.data.frame(elecdemand)) + # dataframe to use, if not specified, will create one, extracting vectors from current environment
   ylab("Demand (GW)") + xlab("Temperature (Celsius)")
 ```
 
@@ -245,7 +249,7 @@ GGally::ggpairs(as.data.frame(visnights[,1:5]))
 
 
 ```{r}
-beer2 <- window(ausbeer, start=1992)
+beer2 <- window(ausbeer, start=1992) # window() = a generic function which extracts the subset of the object x between start and end
 gglagplot(beer2)
 ```
 
@@ -255,7 +259,7 @@ gglagplot(beer2)
 
 
 
-## 8. Autocorellation
+## 8. Autocorelation
 
 
 #### Autocorrelation measures the linear relationship between lagged values of a time series. The value of rk can be written as:
@@ -277,7 +281,7 @@ gglagplot(beer2)
 #### These correspond to the nine scatterplots, also known as a correlogram.
 
 ```{r}
-ggAcf(beer2)
+ggAcf(beer2) # plots the autocorelation coefficients using the ACF function()
 ```
 
 
@@ -302,7 +306,7 @@ autoplot(aelec) + xlab("Year") + ylab("GWh")
 #### Its ACF is shown as:
 
 ```{r}
-ggAcf(aelec, lag=48)
+ggAcf(aelec, lag=48) # lags = number of lag plots desired
 ```
 
 
@@ -318,9 +322,9 @@ ggAcf(aelec, lag=48)
 
 
 ```{r}
-set.seed(30)
-y <- ts(rnorm(50))
-autoplot(y) + ggtitle("White noise")
+set.seed(30) # set a reproductable sequence random result, in this case 30
+y <- ts(rnorm(50)) # ts object of a 50 normal distribution
+autoplot(y) + ggtitle("White noise") # plot the ts object
 ```
 
 
@@ -330,7 +334,7 @@ autoplot(y) + ggtitle("White noise")
 
 
 ```{r}
-ggAcf(y)
+ggAcf(y) # plots the Acf of white noise, expected to lie between (+/-)(2/sqrt(T)). In this example T = 50.
 ```
 
 
@@ -413,38 +417,30 @@ autoplot(mytimeseries)
 
 
 
-#### 3. Download some monthly Australian retail data from the book website. These represent retail sales in various categories for different Australian states, and are stored in a MS-Excel file.
-
-
-#### a. You can read the data into R with the following script:
-
+#### 5. Use the ggseasonplot() and ggsubseriesplot() functions to explore the seasonal patterns in the following time series: writing, fancy, a10, h02.
+#### a) What can you say about the seasonal patterns?
+#### b) Can you identify any unusual years?
 
 ```{r}
-retaildata <- readxl::read_excel("retail.xlsx", skip=1)
+ggseasonplot(writing)
+ggsubseriesplot(writing)
+# The sales amount of paper falls down in August annually
 ```
-
-
-#### The second argument (skip=1) is required because the Excel sheet has two header rows.
-
-
-#### b. Select one of the time series as follows (but replace the column name with your own chosen column):
-
 
 ```{r}
-myts <- ts(retaildata[,"A3349873A"],
-  frequency=12, start=c(1982,4))
+ggseasonplot(fancy)
+ggsubseriesplot(fancy)
+# In December, 1992 the monthly sales for a souvenir shop increased dramatically compared to the same month of the last year
 ```
-
-
-#### c. Explore your chosen retail time series using the following functions: autoplot(), ggseasonplot(), ggsubseriesplot(), gglagplot(), ggAcf().
-#### Can you spot any seasonality, cyclicity and trend? What do you learn about the series?
-
 
 ```{r}
-autoplot(myts)
-ggseasonplot(myts)
-ggsubseriesplot(myts)
-gglagplot(myts, lags = 12)
-ggAcf(myts)
+ggseasonplot(a10)
+ggsubseriesplot(a10)
+# The amount of antidiabetes monthly scripts falls down in February annually
 ```
 
+```{r}
+ggseasonplot(h02)
+ggsubseriesplot(h02)
+# The amount of corticosteroid monthly scripts also falls down in February annually
+```

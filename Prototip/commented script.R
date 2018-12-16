@@ -123,7 +123,7 @@ gglagplot(beer2)
 
       # 8. Autocorrelation #
 
-ggAcf(beer2) # plots the autocorellation coefficients using the ACF function()
+ggAcf(beer2) # plots the autocorelation coefficients using the ACF function()
 
 # We use the window() function and autoplot() function when data is both trended and seasonal
 aelec <- window(elec, start=1980)
