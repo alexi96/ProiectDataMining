@@ -397,7 +397,7 @@ $
 <div id="features-of-power-transformations" class="section level3">
 <h3><strong>11.6 Features of power transformations</strong></h3>
 <ul>
-<li><h4 id="if-some-no-power-transformation-is-possible-unless-all-observations-are-adjusted-by-adding-a-constant-to-all-values.">If some <img src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAEEAAAAYCAYAAACldpB6AAAEAUlEQVRYhe2Yz2siZxjH/Z+e08swiBdFQwIJQSGbsLrkoqF40ELAUEFYsGBBEDzsgBQpgSAeJA1sIqSECEsOIiFkIRDW5BDoYS7Fy9w+Pcyo4482mpgmC/2Cl/eZx3mf7/N7PPwPPK99gReHdcepkWLDpyEiiNJZjuWoXfUGj3wnJPS4Pa+S2Qjyw2/d2dWsNuV3GiI+dqodTAusu1PyEYUoP7uNB+Ctk2CZdGo5YiENLRQjV7MNmRWXpXVEBO/eMSNqNwabIog3TcN8qyT0bjkxUqxpCj2cwji5pfe41iisY/a8goiQrI8z16a4asuile7bIsG6+0I1t4VfKfxbOWodkzkcP4pmFq8IIqsU2xNvop60SZD4/tsgoXd1SCm1hiYaaymDk9u5/T6B63LENlLWKV1OyhtphwRvtk9CjwsjQUgTRDR8HwqcPYwqWV/r5GIbJCrtp3tnBE6xC+so5WcrV6MzT8I/gnZxdTYSJGmTcFmOoHw77H+1BsKlwoVLxaKRVrZSsv5MEnpcHRZIhDREWyNlnLAAx09gaORjJKzjwTxgR3lJN0zgBmNzGglNsk6RiZSvn3c7q8UvYR0lXsLZxXrfjblI6FaiSCBPC+CiwNI0xVaegAgiAfItt0Em99/u52pbjiJmp0YuFkJTOuFMlfMFh8N8keBCKx+wBZsGN67zfr8Vb5am67xbiSLiZe/46d7s3Z5gpMLoSiOUKHD4nI7gwsCWR0mIu0kYhny00nU9brIfH7YTc3DepRIVRLapjhXRp8AyO9RyMUKaQg9nqJ4/YTZwYebuoHZdJDT7fTVKpeu+XYO0mkKOuU9cBFkv0l5kWjuDUlhXaKEEhcP5psQBmn17vGSb48K+AwWJVoYkDJhbLdKe+mcOo3/8zGowSNCvo5yFxB8MEv/1ZvxNz4Nl0nG6iNLDZKrn83UR18QY3zfHhC3yAVu2adxMIWG9xDB6LM4+OrnVL54OmlkvIopk/QX62whc84QW4sd6d2bNwe6QbjBCQ78BTOwOl2UiyvZ4sW3ZK2g+YntbBJVuuArWNeWIILKJseAA+GdYmPff+HOuaBhukdvGBT3Aujsiu/IvW+TDWYnEshPmohF6H3Fa41hIvVQ9eAnM8z3BMs2Jamwe7DiExBlJq6ZdJwIfzxY0Qr8uPGDSzK3Yxi4VGM6Jw+nRl22OGGvP5f354IGD1DI//f7Xf375RcEDR+w6LXBIgkW7ZNcD5c9wNFZc7R6bpG7BQyONP1KaIy0+k9H6g8r8v3efFl+EPHBBYUkQ/T2fOk5BLG3jE0GtZDmeMghZ7TIffDor4Q1WEyVO777vpPCAvSZnNnxoIogo9OUYueoXvnPbZsab+Kjy2vgbrRD4zLOdF0QAAAAASUVORK5CYII=" />, no power transformation is possible unless all observations are adjusted by adding a constant to all values.</h4></li>
+<li><h4 id="if-some-y_tle0-no-power-transformation-is-possible-unless-all-observations-are-adjusted-by-adding-a-constant-to-all-values.">If some <span class="math inline">\(y_{t}\le0\)</span>, no power transformation is possible unless all observations are adjusted by adding a constant to all values.</h4></li>
 <li><h4 id="choose-a-simple-value-of-.-it-makes-explanations-easier.">Choose a simple value of λ. It makes explanations easier.</h4></li>
 <li><h4 id="the-forecasting-results-are-relatively-insensitive-to-the-value-of-.">The forecasting results are relatively insensitive to the value of λ.</h4></li>
 <li><h4 id="often-no-transformation-is-needed.">Often no transformation is needed.</h4></li>
@@ -424,8 +424,8 @@ y_t =
 $
 </center>
 </div>
-<div id="where-is-the-h-step-forecast-variance.-the-larger-the-forecast-variance-the-bigger-the-difference-between-the-mean-and-the-median." class="section level4">
-<h4>where <img src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAB4AAAAkCAYAAACe0YppAAAC00lEQVRYhe2Xv2sacRTA8z+96ZAgR0CxYsBycGAsNcHFhiIhDoYIQiAg1ID0aIZKA3GQQnC4wcEKKUkDxYKDFAOSkAaKkMHNxe3TwdNE42laTwqlD77L4/H93Pf9viX+kiw5c02XWmGbUCCAxyW41BDb+VNuewsGNw51PIkTrrvWR+R0FBHc8RLtxYGrpN2CiIbRsFQ9k4QiiATJ1RcG/syeKoiopKsD3zYwNEFEiJcm+9uZGHfvuLm5oztU3HshV18keEw6ZgK3CEokT9MmwZwHd8okVUHxJClNSWuHwW3MhIqiZzidVkvOgtuYSQ/LawY1K9hX5yXOrxYK7lE39BEoNDnUgxzUnpxcXa6/FHiztU7Q58NndzbeMyjbtplAlRXWtnfY2RmcDfwSpWDTQUbB7TOMqIqIzDyu6DEtAMokFRs7d4rKzKxumyQ9CiIKq8kTvt11gR63pxl0RRBxk7K75Q/EArcpxd2ICGrCHOuvPUrx/gu8mQuHwbUsfhFEwuRb4yb3YEmYzoKr6f5rJVak88ikTi7YB2vDKeAIuMmh3r84OGmUtPKERRDxk605xmXp4SSZ5Mla1o+IoESOeBQFgJ8f2fKpuOT3EnDE1bHiqKN7daOf0WoC026iA/fhsK/biWBaR0QUQbR9q8d2uf6UZc0lKJ44xcsZr+gUiYkgWg6bKWgDBnqXJXZDA5cpLAfW2St8nbo3DaWc7K86qQpPrXRHenU9F0REeH3SnW3sHPgHRxFBZIXwZpRwNE7suYoa2sW0mUwOgQe9WmWz8L2//jQMNBGWU5UFgi8yeMdXWUun5eq2MZ8b3DC0R/Ht67zsny1s9elQjI33eKshefeZwp0TPFjcgwcMFw1r4PgzF/Rqbwm9eMeknX4+cDWNe6x+m4e65eY25aQH3Zgc57nArQ8vURQP6cqD+m0c8+qZin81QGB38D/lMHge+Q/+98G/AErZbW0KB/2gAAAAAElFTkSuQmCC" /> is the <strong><em>h</em></strong>-step forecast variance. The larger the forecast variance, the bigger the difference between the mean and the median.</h4>
+<div id="where-sigma_h2-is-the-h-step-forecast-variance.-the-larger-the-forecast-variance-the-bigger-the-difference-between-the-mean-and-the-median." class="section level4">
+<h4>where <span class="math inline">\(\sigma_h^2\)</span> is the <strong><em>h</em></strong>-step forecast variance. The larger the forecast variance, the bigger the difference between the mean and the median.</h4>
 </div>
 <div id="the-difference-between-the-simple-back-transformed-forecast-given-by-3.1-and-the-mean-given-by-3.2-is-called-the-bias.-when-we-use-the-mean-rather-than-the-median-we-say-the-point-forecasts-have-been-bias-adjusted." class="section level4">
 <h4>The difference between the simple back-transformed forecast given by (3.1) and the mean given by (3.2) is called the <strong>bias</strong>. When we use the mean, rather than the median, we say the point forecasts have been <strong>bias-adjusted</strong>.</h4>
@@ -1226,16 +1226,16 @@ Multiplier
 <h4>To generate such intervals, we can simply add the bootstrap argument to our forecasting functions. For example:</h4>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">naive</span>(goog200, <span class="dt">bootstrap=</span><span class="ot">TRUE</span>)</code></pre></div>
 <pre><code>##     Point Forecast    Lo 80    Hi 80    Lo 95    Hi 95
-## 201       531.4783 526.0091 537.4795 523.2322 541.0612
-## 202       531.4783 523.3883 539.0708 519.8348 545.1813
-## 203       531.4783 521.1183 541.2369 516.8874 549.8758
-## 204       531.4783 519.4643 542.8386 514.1158 554.3663
-## 205       531.4783 517.5178 544.4120 511.5513 561.4176
-## 206       531.4783 516.1086 545.9462 509.5478 577.8721
-## 207       531.4783 514.8096 547.3632 506.8791 582.6792
-## 208       531.4783 513.8339 549.3153 505.8274 585.0665
-## 209       531.4783 512.4034 550.7911 504.2334 587.3237
-## 210       531.4783 511.1587 552.3078 502.3408 587.2706</code></pre>
+## 201       531.4783 525.7409 537.4795 523.2322 541.0612
+## 202       531.4783 523.4013 539.6217 519.8544 545.4246
+## 203       531.4783 521.1703 541.1015 516.6739 549.5449
+## 204       531.4783 519.3500 543.1461 513.7101 552.8835
+## 205       531.4783 517.5724 544.2777 511.4784 560.0765
+## 206       531.4783 516.4228 546.3619 509.3099 578.3064
+## 207       531.4783 514.8154 547.6210 507.1501 582.2826
+## 208       531.4783 513.3123 549.1021 505.3223 583.0827
+## 209       531.4783 512.1551 550.5070 503.3109 586.0687
+## 210       531.4783 510.7866 552.2467 501.8838 588.3139</code></pre>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="co">#&gt;     Point Forecast Lo 80 Hi 80 Lo 95 Hi 95</span>
 <span class="co">#&gt; 201          531.5 525.6 537.8 522.9 541.1</span>
 <span class="co">#&gt; 202          531.5 523.0 539.4 519.5 546.2</span>

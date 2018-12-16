@@ -194,7 +194,7 @@ $\begin{equation}
 
 ### **11.6 Features of power transformations**
 
-* #### If some ![](FeaturesOfPowerTransformations.png), no power transformation is possible unless all observations are adjusted by adding a constant to all values.
+* #### If some $y_{t}\le0$, no power transformation is possible unless all observations are adjusted by adding a constant to all values.
 * #### Choose a simple value of λ. It makes explanations easier.
 * #### The forecasting results are relatively insensitive to the value of λ.
 * #### Often no transformation is needed.
@@ -219,7 +219,7 @@ y_t =
 $
 </center>
 
-#### where ![](BiasAdjustments2.png) is the ***h***-step forecast variance. The larger the forecast variance, the bigger the difference between the mean and the median.
+#### where $\sigma_h^2$ is the ***h***-step forecast variance. The larger the forecast variance, the bigger the difference between the mean and the median.
 
 #### The difference between the simple back-transformed forecast given by (3.1) and the mean given by (3.2) is called the **bias**. When we use the mean, rather than the median, we say the point forecasts have been **bias-adjusted**.
 
@@ -896,7 +896,6 @@ print(c("Good value of lambda for enplanements: ",
       lambda_enplanements))
 autoplot(BoxCox(enplanements, lambda_enplanements))
 ```
-
 
 2. Why is a Box-Cox transformation unhelpful for the cangas data?
 
