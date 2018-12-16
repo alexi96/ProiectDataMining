@@ -2,6 +2,9 @@
 # Time series I: EDA #
 #####################
 
+library(forecast)
+library(fpp2)
+
         # 10. Some simple forecasting methods #
 
     # 10.1. Average method
@@ -10,14 +13,14 @@ y <- ts(c(123,39,78,52,110), start=2012) # y contains the time series
 h = 10 # h is the forecast horizon
 meanf(y, h)
 
-    # 10.2. Na?ve method
+    # 10.2. Naïve method
 
 y <- ts(c(123,39,78,52,110), start=2012) # y contains the time series
 h = 10 # h is the forecast horizon
 naive(y, h)
 rwf(y, h) # Equivalent alternative
 
-    # 10.3. Seasonal na?ve method
+    # 10.3. Seasonal naïve method
 
 y <- ts(c(123,39,78,52,110), start=2012) # y contains the time series
 h = 10 # h is the forecast horizon
@@ -306,7 +309,7 @@ naive(goog200, bootstrap=TRUE)
 # ```thetaf()```
 # ```forecast()```
 
-	# 15.2 ```forecast()``` function
+  # 15.2 ```forecast()``` function
 
 # Here is a simple example, applying ```forecast()``` to the ```ausbeer``` data:
 
