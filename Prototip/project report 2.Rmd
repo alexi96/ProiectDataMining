@@ -192,7 +192,7 @@ $\begin{equation}
 \end{equation}$
 </center>
 
-### **11.6 Features of power transformations**
+### **11.5 Features of power transformations**
 
 * #### If some $y_{t}\le0$, no power transformation is possible unless all observations are adjusted by adding a constant to all values.
 * #### Choose a simple value of λ. It makes explanations easier.
@@ -200,7 +200,7 @@ $\begin{equation}
 * #### Often no transformation is needed.
 * #### Transformations sometimes make little difference to the forecasts but have a large effect on prediction intervals.
 
-### **11.7 Bias adjustments**
+### **11.6 Bias adjustments**
 
 #### One issue with using mathematical transformations such as Box-Cox transformations is that the back-transformed point forecast will not be the mean of the forecast distribution. In fact, it will usually be the median of the forecast distribution (assuming that the distribution on the transformed space is symmetric). For many purposes, this is acceptable, but occasionally the mean forecast is required. For example, you may wish to add up sales forecasts from various regions to form a forecast for the whole country. But medians do not add up, whereas means do.
 

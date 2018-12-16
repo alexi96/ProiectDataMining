@@ -62,15 +62,9 @@ library(fpp2)
 
 *11.2 Population adjustments*
 
-*11.3 Population adjustments*
+*11.3 Inflation adjustments*
 
-*11.4 Inflation adjustments*
-
-*11.5 Mathematical transformations*
-
-*11.6 Features of power transformations*
-
-*11.7 Bias adjustments*
+*11.4 Mathematical transformations*
 
 **12. Residual diagnostics**
 
@@ -80,39 +74,17 @@ library(fpp2)
 
 *12.3 Example: Forecasting the Google daily closing stock price*
 
-*12.4 Portmanteau tests for autocorrelation*
-
 **13. Evaluating forecast accuracy**
 
-*13.1 Training and test sets*
+*13.1 Pipe operator*
 
-*13.2 Functions to subset a time series*
-
-*13.3 Forecast errors*
-
-*13.4 Scale-dependent errors*
-
-*13.5 Percentage errors*
-
-*13.6 Examples*
-
-*13.7 Time series cross-validation*
-
-*13.8 Pipe operator*
-
-*13.9 Example: using tsCV()*
-
-*13.10 Bibliography*
+*13.2 Example: using tsCV()*
 
 **14. Prediction intervals**
 
-*14.1 One-step prediction intervals*
+*14.1 Benchmark methods*
 
-*14.2 Multi-step prediction intervals*
-
-*14.3 Benchmark methods*
-
-*14.4 Prediction intervals from bootstrapped residuals*
+*14.2  Prediction intervals from bootstrapped residuals*
 
 *14.5 Prediction intervals with transformations*
 
@@ -252,7 +224,7 @@ dframe <- cbind(Monthly = milk,
 
 ### **11.2 Population adjustments**
 
-#### Any data that are affected by population changes can be adjusted to give per-capita data. That is, consider the data per person (or per thousand people, or per million people) rather than the total. For example, if you are studying the number of hospital beds in a particular region over time, the results are much easier to interpret if you remove the effects of population changes by considering the number of beds per thousand people. Then you can see whether there have been real increases in the number of beds, or whether the increases are due entirely to population increases. It is possible for the total number of beds to increase, but the number of beds per thousand people to decrease. This occurs when the population is increasing faster than the number of hospital beds. For most data that are affected by population changes, it is best to use per-capita data rather than the totals.
+#### Any data that are affected by population changes can be adjusted to give per-capita data. That is, consider the data per person (or per thousand people, or per million people) rather than the total. For example, if you are studying the number of hospital beds in a particular region over time, the results are much easier to interpret if you remove the effects of population changes by considering the number of beds per thousand people. Then you can see whether there have been real increases in the number of beds, or whether the increases are due entirely to population increases.
 
 ### **11.3 Inflation adjustments**
 
@@ -330,37 +302,7 @@ ggAcf(res) + ggtitle("ACF of residuals")
 
 ### **13.1 Functions to subset a time series**
 
-#### The ```window()``` function introduced in Chapter 2 is useful when extracting a portion of a time series, such as we need when creating training and test sets. In the ```window()``` function, we specify the start and/or end of the portion of time series required using time values. For example,
-
-```{r}
-window(ausbeer, start=1995)
-```
-
-#### extracts all data from 1995 onward.
-
-#### Another useful function is subset() which allows for more types of subsetting. A great advantage of this function is that it allows the use of indices to choose a subset. For example,
-
-```{r}
-subset(ausbeer, start=length(ausbeer)-4*5)
-```
-
-#### extracts the last 5 years of observations from ```ausbeer```. It also allows extracting all values for a specific season. For example,
-
-```{r}
-subset(ausbeer, quarter = 1)
-```
-
-#### extracts the first quarters for all years.
-
-#### Finally, ```head``` and ```tail``` are useful for extracting the first few or last few observations. For example, the last 5 years of ```ausbeer``` can also be obtained using
-
-```{r}
-tail(ausbeer, 4*5)
-```
-
-### **13.2 Forecast errors**
-
-#### The ```window()``` function introduced in Chapter 2 is useful when extracting a portion of a time series, such as we need when creating training and test sets. In the ```window()``` function, we specify the start and/or end of the portion of time series required using time values. For example,
+#### The ```window()``` function is useful when extracting a portion of a time series, such as we need when creating training and test sets. In the ```window()``` function, we specify the start and/or end of the portion of time series required using time values. For example,
 
 ```{r}
 window(ausbeer, start=1995)
@@ -525,7 +467,7 @@ naive(goog200, bootstrap=TRUE)
 
 ### **15.1 ```forecast()``` function**
 
-#### So far we have used functions which produce a ```forecast``` object directly. But a more common approach, which we will focus on in the rest of the book, will be to fit a model to the data, and then use the ```forecast()``` function to produce forecasts from that model.
+#### So far we have used functions which produce a ```forecast``` object directly.
 
 #### The ```forecast()``` function works with many different types of inputs. It generally takes a time series or time series model as its main argument, and produces forecasts appropriately. It always returns objects of class ```forecast```.
 
