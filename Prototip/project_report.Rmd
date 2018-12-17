@@ -328,9 +328,9 @@ autoplot(y) + ggtitle("White noise") # plot the ts object
 ```
 
 
-#### For white noise series, we expect each autocorrelation to be close to zero. Of course, they will not be exactly equal to zero as there is some random variation. For a white noise series, we expect 95% of the spikes in the ACF to lie within ±2/√T where T is the length of the time series.
+#### For white noise series, we expect each autocorrelation to be close to zero. Of course, they will not be exactly equal to zero as there is some random variation. For a white noise series, we expect 95% of the spikes in the ACF to lie within $\pm 2/\sqrt{T}$ where T is the length of the time series.
  
-#### In this example, T=50 and so the bounds are at ±2/√50=±0.28.All of the autocorrelation coefficients lie within these limits, confirming that the data are white noise.
+#### In this example, T=50 and so the bounds are at $\pm 2/\sqrt{50}$ = $\pm 0.28$. All of the autocorrelation coefficients lie within these limits, confirming that the data are white noise.
 
 
 ```{r}
