@@ -109,7 +109,7 @@ y
 
 ## **2. Time plots** ##
 
-#### Time plots are observations plotted againts the time of observation, with consecutive observations joined by straight lines
+#### Time plots are observations plotted againts the time of observation, with consecutive observations joined by straight lines.
 
 ```{r}
 autoplot(melsyd[,"Economy.Class"]) + # The Autoplot() command will automattically produces a plot of whatever is passed as its first argument.
@@ -135,7 +135,7 @@ autoplot(a10) +
 ### **3.1 Trend:**
 
 
-#### A trend exists when there is a long-term increase or decrease in the data. It does not have to be linear. Sometimes we will refer to a trend as "changing direction" , when it might go from an increasing trend to a decreasing trend. There is a trend in the antidiabetic drug sales data shown in Figure 2.2.
+#### A trend exists when there is a long-term increase or decrease in the data. It does not have to be linear. Sometimes we will refer to a trend as "changing direction" , when it might go from an increasing trend to a decreasing trend. There is a trend in the antidiabetic drug sales data shown in the last figure.
 
 
 ### **3.2 Seasonal:**
@@ -281,7 +281,7 @@ GGally::ggpairs(as.data.frame(visnights[,1:5]))
 
 
 
-#### The next figure displays scatterplots of quarterly Australian beer production, where the horizontal axis shows lagged values of the time series. Each graph shows **yt** plotted against **yt-k** for different values of k.
+#### The next figure displays scatterplots of quarterly Australian beer production, where the horizontal axis shows lagged values of the time series. Each graph shows **$y_{t}$** plotted against **$y_{t-k}$** for different values of k.
 
 ```{r}
 beer2 <- window(ausbeer, start=1992)
