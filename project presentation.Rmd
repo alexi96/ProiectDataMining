@@ -283,7 +283,7 @@ GGally::ggpairs(as.data.frame(visnights[,1:5]))
 
 
 
-#### The next figure displays scatterplots of quarterly Australian beer production, where the horizontal axis shows lagged values of the time series. Each graph shows **yt** plotted against **yt-k** for different values of k.
+#### The next figure displays scatterplots of quarterly Australian beer production, where the horizontal axis shows lagged values of the time series. Each graph shows **$y_{t}$** plotted against **$y_{t-k}$** for different values of k.
 
 ```{r}
 beer2 <- window(ausbeer, start=1992)
