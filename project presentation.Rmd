@@ -1,8 +1,6 @@
 ---
 title: "Time series I: EDA"
-author:
-- name: Radu Ioan-Alexandru (Gr 405)
-- name: Stefan Eva (Gr 405)
+author: Radu Ioan-Alexandru (Gr 405) Stefan Eva (Gr 405)
 date: "\t `r format(Sys.time(), '%d %B %Y')`"
 output: slidy_presentation
 ---
