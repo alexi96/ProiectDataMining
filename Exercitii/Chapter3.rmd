@@ -96,7 +96,6 @@ autoplot(BoxCox(bricksq, lambda_bricksq))
 # For bricksq data, it looked like it is meaningless to transform it
 ```
 
-
 5. Calculate the residuals from a seasonal naïve forecast applied to the quarterly Australian beer production data from 1992. Test if the residuals are white noise and normally distributed. What do you conclude?
 
 ```{r}
@@ -108,7 +107,6 @@ autoplot(res)
 checkresiduals(fc)
 # The ACF plot result indicates that the residuals aren't white noise because of significant spike at lag 4. And Ljung-Box test shows that it is statistically significant. Therefore they aren't white noise. Also they aren't normally distributed.
 ```
-
 
 6. Repeat the exercise for the WWWusage and bricksq data. Use whichever of naive or snaive is more appropriate in each case.
 
@@ -223,7 +221,6 @@ writeLines("")
 accuracy(fc3, test3)
 # MAPE was smallest for 2015 prediction and biggest for 2014 prediction. MAPE became smaller in 2016 prediction, but it wan't smaller than the one for 2015.
 ```
-
 
 10. Use the Dow Jones index (data set dowjones) to do the following:
 
