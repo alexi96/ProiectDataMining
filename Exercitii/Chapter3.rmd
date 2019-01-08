@@ -1,12 +1,13 @@
 # Chapter 3
 
-```{r echo=FALSE, message=FALSE, warning=FALSE, Load_packages}
+```{r echo=FALSE}
+library(forecast)
 library(fpp2)
 ```
 
 1. For the following series, find an appropriate Box-Cox transformation in order to stabilize the variance.
 
-```{r echo=FALSE, message=FALSE, warning=FALSE, Question1}
+```{r}
 # - usnetelec
 lambda_usnetelec <- BoxCox.lambda(usnetelec)
 print(c("Good value of lambda for usnetelec: ", 
@@ -32,7 +33,7 @@ autoplot(BoxCox(enplanements, lambda_enplanements))
 
 2. Why is a Box-Cox transformation unhelpful for the cangas data?
 
-```{r echo=FALSE, message=FALSE, warning=FALSE, Question2}
+```{r}
 autoplot(cangas)
 lambda_cangas <- BoxCox.lambda(cangas)
 autoplot(BoxCox(cangas, lambda_cangas))
@@ -41,7 +42,7 @@ autoplot(BoxCox(cangas, lambda_cangas))
 
 3. What Box-Cox transformation would you select for your retail data (from Exercise 3 in Section 2.10)?
 
-```{r echo=FALSE, message=FALSE, warning=FALSE, Question3}
+```{r}
 retaildata <- xlsx::read.xlsx("retail.xlsx", sheetIndex = 1, startRow = 2)
 myts <- ts(retaildata[,"A3349873A"], frequency=12, start=c(1982,4))
 lambda_retail <- BoxCox.lambda(myts)
@@ -66,7 +67,7 @@ autoplot(myts) +
 
 4. For each of the following series, make a graph of the data. If transforming seems appropriate, do so and describe the effect. dole, usdeaths, bricksq.
 
-```{r echo=FALSE, message=FALSE, warning=FALSE, Question4}
+```{r}
 autoplot(dole)
 lambda_dole <- BoxCox.lambda(dole)
 autoplot(BoxCox(dole, lambda_dole))
@@ -84,7 +85,7 @@ autoplot(BoxCox(bricksq, lambda_bricksq))
 
 5. Calculate the residuals from a seasonal naïve forecast applied to the quarterly Australian beer production data from 1992. Test if the residuals are white noise and normally distributed. What do you conclude?
 
-```{r echo=FALSE, message=FALSE, warning=FALSE, Question5}
+```{r}
 beer <- window(ausbeer, start=1992)
 fc <- snaive(beer)
 autoplot(fc)
@@ -97,7 +98,7 @@ checkresiduals(fc)
 
 6. Repeat the exercise for the WWWusage and bricksq data. Use whichever of naive or snaive is more appropriate in each case.
 
-```{r echo=FALSE, message=FALSE, warning=FALSE, Question6}
+```{r}
 snaive_www <- snaive(WWWusage, h = 15)
 autoplot(snaive_www)
 checkresiduals(snaive_www)
@@ -138,7 +139,7 @@ answer
 
 8. For your retail time series (from Exercise 3 in Section 2.10):
 
-```{r echo=FALSE, message=FALSE, warning=FALSE, Question8}
+```{r}
 # a. Split the data into two parts using
 myts.train <- window(myts, end=c(2010,12))
 myts.test <- window(myts, start=2011)
@@ -159,33 +160,34 @@ checkresiduals(snaive_myts_train)
 # I don't know whether this method is what the author wanted to solve this question about sensitivity.
 ```
 
-9. vn contains quarterly visitor nights (in millions) from 1998-2015 for eight regions of Australia.
+9. visnights contains quarterly visitor nights (in millions) from 1998 to 2016 for twenty regions of Australia.
 
-```{r echo=FALSE, message=FALSE, warning=FALSE, Question9}
-# a. Use window() to create three training sets for vn[,"Melbourne"], omitting the last 1, 2 and 3 years; call these train1, train2, and train3, respectively. For example train1 <- window(vn[, "Melbourne"], end = c(2014, 4)).
-vn_Melbourne_train1 <- window(vn[, "Melbourne"], end = c(2014, 4))
-vn_Melbourne_train2 <- window(vn[, "Melbourne"], end = c(2013, 4))
-vn_Melbourne_train3 <- window(vn[, "Melbourne"], end = c(2012, 4))
-# b. Compute one year of forecasts for each training set using the snaive() method. 
-snaive_vn_Melbourne_train1 <- snaive(vn_Melbourne_train1, h = 4)
-snaive_vn_Melbourne_train2 <- snaive(vn_Melbourne_train2, h = 4)
-snaive_vn_Melbourne_train3 <- snaive(vn_Melbourne_train3, h = 4)
+```{r}
+# Use window() to create three training sets for visnights[,"QLDMetro"], omitting the last 1, 2 and 3 years; call these train1, train2, and train3, respectively. For example train1 <- window(visnights[, "QLDMetro"], end = c(2015, 4))
+temp = visnights[, "QLDMetro"]
+train1 <- window(temp, end = c(2015, 4))
+train2 <- window(temp, end = c(2014, 4))
+train3 <- window(temp, end = c(2013, 4))
+# b. Compute one year of forecasts for each training set using the snaive() method. Call these fc1, fc2 and fc3, respectively
+fc1 <- snaive(train1, h = 4)
+fc2 <- snaive(train2, h = 4)
+fc3 <- snaive(train3, h = 4)
 # c. Use accuracy() to compare the MAPE over the three test sets. Comment on these.
-vn_Melbourne_test1 <- window(vn[, "Melbourne"], start = c(2015, 1), end = c(2015, 4))
-vn_Melbourne_test2 <- window(vn[, "Melbourne"], start = c(2014, 1), end = c(2014, 4))
-vn_Melbourne_test3 <- window(vn[, "Melbourne"], start = c(2013, 1), end = c(2013, 4))
-accuracy(snaive_vn_Melbourne_train1, vn_Melbourne_test1)
+test1 <- window(temp, start = c(2016, 1), end = c(2016, 4))
+test2 <- window(temp, start = c(2015, 1), end = c(2015, 4))
+test3 <- window(temp, start = c(2014, 1), end = c(2014, 4))
+accuracy(fc1, test1)
 writeLines("")
-accuracy(snaive_vn_Melbourne_train2, vn_Melbourne_test2)
+accuracy(fc2, test2)
 writeLines("")
-accuracy(snaive_vn_Melbourne_train3, vn_Melbourne_test3)
-# MAPE was smallest for 2015 prediction and biggest for 2014 prediction. MAPE became smaller in 2013 prediction, but it wan't smaller than the one for 2015.
+accuracy(fc3, test3)
+# MAPE was smallest for 2015 prediction and biggest for 2014 prediction. MAPE became smaller in 2016 prediction, but it wan't smaller than the one for 2015.
 ```
 
 
 10. Use the Dow Jones index (data set dowjones) to do the following:
 
-```{r echo=FALSE, message=FALSE, warning=FALSE, Question10}
+```{r}
 # a. Produce a time plot of the series.
 autoplot(dowjones)
 # b. Produce forecasts using the drift method and plot them.
@@ -219,7 +221,7 @@ autoplot(snaive_dj)
 
 11. Consider the daily closing IBM stock prices (data set ibmclose).
 
-```{r echo=FALSE, message=FALSE, warning=FALSE, Question11}
+```{r message=FALSE, warning=FALSE}
 # a. Produce some plots of the data in order to become familiar with it.
 autoplot(ibmclose)
 # b. Split the data into a training set of 300 observations and a test set of 69 observations.
@@ -284,12 +286,12 @@ checkresiduals(drift_ibm)
 
 12. Consider the sales of new one-family houses in the USA, Jan 1973 - Nov 1995 (data set hsales).
 
-```{r echo=FALSE, message=FALSE, warning=FALSE, Question12}
+```{r warning=FALSE}
 # a. Produce some plots of the data in order to become familiar with it.
-autoplot(hsales)
+autoplot(hsales) # we call autoplot
 # b. Split the hsales data set into a training set and a test set, where the test set is the last two years of data.
 hsales_train <- subset(hsales, end = length(hsales) - 24)
-hsales_test <- subset(hsales, start = length(hsales) - 23)
+hsales_test <- subset(hsales, start = length(hsales) - 23) # from the end - 23 months
 # c. Try using various benchmark methods to forecast the training set and compare the results on the test set.  Which method did best?
 snaive_hsales <- snaive(hsales_train, h = 24)
 naive_hsales <- naive(hsales_train, h = 24)
