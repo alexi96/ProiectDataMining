@@ -45,7 +45,7 @@ autoplot(BoxCox(enplanements, lambda_enplanements))
 autoplot(cangas)
 lambda_cangas <- BoxCox.lambda(cangas)
 autoplot(BoxCox(cangas, lambda_cangas))
-# can see that Box-Cox transformation doesn't yield simpler model
+# You can see that the Box-Cox transformation doesn't yield simpler model
 ```
 
 3. What Box-Cox transformation would you select for your retail data (from Exercise 3 in Section 2.10)?
@@ -70,7 +70,7 @@ autoplot(myts) +
   autolayer(fc_retail, series = "Drift method with Box-Cox Transformation") +
   autolayer(fc_retail_biasadj$mean, series = "Bias Adjusted") +
   guides(colour = guide_legend(title = "Forecast"))
-# It would be better to choose bias adjusted Box-Cox Transformation with lambda = 0.128
+# It is better to choose a bias adjusted Box-Cox Transformation with lambda = 0.128
 ```
 
 4. For each of the following series, make a graph of the data. If transforming seems appropriate, do so and describe the effect. dole, usdeaths, bricksq.
@@ -79,21 +79,21 @@ autoplot(myts) +
 autoplot(dole)
 lambda_dole <- BoxCox.lambda(dole)
 autoplot(BoxCox(dole, lambda_dole))
-# For dole data, it looked like using Box-Cox Transformation would be better to see the pattern
+# For dole data, it looks like using Box-Cox Transformation is better to see the pattern.
 ```
 
 ```{r}
 autoplot(usdeaths)
 lambda_usdeaths <- BoxCox.lambda(usdeaths)
 autoplot(BoxCox(usdeaths, lambda_usdeaths))
-# For usdeaths data, it looked like it is meaningless to transform it
+# For usdeaths data, it looks like it is meaningless to transform it.
 ```
 
 ```{r}
 autoplot(bricksq)
 lambda_bricksq <- BoxCox.lambda(bricksq)
 autoplot(BoxCox(bricksq, lambda_bricksq))
-# For bricksq data, it looked like it is meaningless to transform it
+# For bricksq data, it looks like it is meaningless to transform it
 ```
 
 5. Calculate the residuals from a seasonal naïve forecast applied to the quarterly Australian beer production data from 1992. Test if the residuals are white noise and normally distributed. What do you conclude?
@@ -105,7 +105,9 @@ autoplot(fc)
 res <- residuals(fc)
 autoplot(res)
 checkresiduals(fc)
-# The ACF plot result indicates that the residuals aren't white noise because of significant spike at lag 4. And Ljung-Box test shows that it is statistically significant. Therefore they aren't white noise. Also they aren't normally distributed.
+# The ACF plot result indicates that the residuals aren't white noise because of significant spike at lag 4.
+# Ljung-Box test shows that it is statistically significant. 
+# Therefore they aren't white noise and they aren't normally distributed.
 ```
 
 6. Repeat the exercise for the WWWusage and bricksq data. Use whichever of naive or snaive is more appropriate in each case.
@@ -117,8 +119,10 @@ checkresiduals(snaive_www)
 naive_www <- naive(WWWusage)
 autoplot(naive_www)
 checkresiduals(naive_www)
-# The ACF plot indicates that the residuals aren't white noise because of existence of significant spikes. And Ljung-Box test shows that they are statistically significant for both of methods. Therefore they aren't white noise. And the distribution of residuals isn't normal, too.
-# If I need to choose between above 2 methods, I will choose naive method because there isn't any particular seasonal pattern in the data and the Q values of Ljung-Box test were same for both methods.
+# The ACF plot indicates that the residuals aren't white noise because of existence of significant spikes. 
+# Ljung-Box test shows that they are statistically significant for both of methods. 
+# Therefore they aren't white noise. And the distribution of residuals isn't normal, too.
+# We will choose the naive method because there isn't any particular seasonal pattern in the data and the Q values of Ljung-Box test were same for both methods.
 ```
 
 ```{r}
@@ -129,7 +133,7 @@ naive_bricksq <- naive(bricksq)
 autoplot(naive_bricksq)
 checkresiduals(naive_bricksq)
 # For both of methods, Ljung-Box test results show that the residuals aren't white noise. And the residuals didn't have normal distribution, too.
-# If I need to choose between above 2 methods, I will choose snaive method because I can see the seasonality in the data and the Q value of Ljung-Box of snaive methods was less than the value of naive method.
+# We will choose snaive method because we can see the seasonality in the data and the Q value of Ljung-Box of snaive methods was less than the value of naive method.
 ```
 
 7. Are the following statements true or false? Explain your answer.
@@ -180,10 +184,10 @@ accuracy(snaive_myts_train, myts.test)
 ```{r}
 # e. Check the residuals. Do the residuals appear to be uncorrelated and normally distributed?
 checkresiduals(snaive_myts_train)
+# residuals were correlated with each other and not normally distributed
 ```
 
 ```{r}
-# residuals were correlated with each other and not normally distributed
 # f. How sensitive are the accuracy measures to the training/test split?
 # I thought of sensitivity as the ratio of the test set error to the train set error. When I used the definition, it looked like Mean Error is highly sensitive, RMSE, MAE, MPE, MASE are sensitive and MAPE and ACF1 aren't much sensitive.
 # I don't know whether this method is what the author wanted to solve this question about sensitivity.
@@ -193,24 +197,25 @@ checkresiduals(snaive_myts_train)
 
 ```{r}
 # a. Use window() to create three training sets for visnights[,"QLDMetro"], omitting the last 1, 2 and 3 years; call these train1, train2, and train3, respectively. For example train1 <- window(visnights[, "QLDMetro"], end = c(2015, 4))
-```
 
-```{r}
 temp = visnights[, "QLDMetro"]
 train1 <- window(temp, end = c(2015, 4))
 train2 <- window(temp, end = c(2014, 4))
 train3 <- window(temp, end = c(2013, 4))
-# b. Compute one year of forecasts for each training set using the snaive() method. Call these fc1, fc2 and fc3, respectively
 ```
 
 ```{r}
+# b. Compute one year of forecasts for each training set using the snaive() method. Call these fc1, fc2 and fc3, respectively
+
 fc1 <- snaive(train1, h = 4)
 fc2 <- snaive(train2, h = 4)
 fc3 <- snaive(train3, h = 4)
-# c. Use accuracy() to compare the MAPE over the three test sets. Comment on these.
 ```
 
 ```{r}
+
+# c. Use accuracy() to compare the MAPE over the three test sets. Comment on these.
+
 test1 <- window(temp, start = c(2016, 1), end = c(2016, 4))
 test2 <- window(temp, start = c(2015, 1), end = c(2015, 4))
 test3 <- window(temp, start = c(2014, 1), end = c(2014, 4))
@@ -240,7 +245,7 @@ autoplot(drift_dj)
 dj_x <- c(1, 78)
 dj_y <- c(dowjones[1], dowjones[78])
 lm_dj <- lm(dj_y ~ dj_x)
-# It looked like ggplot2 package isn't compatible to graphics package that autoplot function, made of ggplot2 can't be worked with graphics function like abline, etc. When I tried it, 'plot.new has not been called yet' error appeared.
+
 autoplot(drift_dj) +
   geom_abline(intercept = lm_dj$coefficients[1],
               slope = lm_dj$coefficients[2],
@@ -377,5 +382,5 @@ accuracy(mean_hsales, hsales_test)
 ```{r}
 # d. Check the residuals of your preferred method. Do they resemble white noise?
 checkresiduals(snaive_hsales) 
-# But the residuals don't resemble white noise
+# The residuals don't resemble white noise
 ```
