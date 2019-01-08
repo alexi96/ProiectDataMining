@@ -13,23 +13,31 @@ lambda_usnetelec <- BoxCox.lambda(usnetelec)
 print(c("Good value of lambda for usnetelec: ", 
         lambda_usnetelec))
 autoplot(BoxCox(usnetelec, lambda_usnetelec))
+```
+
+```{r}
 # - usgdp
 lambda_usgdp <- BoxCox.lambda(usgdp)
 print(c("Good value of lambda for usgdp: ", 
       lambda_usgdp))
 autoplot(BoxCox(usgdp, lambda_usgdp))
+```
+
+```{r}
 # - mcopper
 lambda_mcopper <- BoxCox.lambda(mcopper)
 print(c("Good value of lambda for mcopper: ", 
       lambda_mcopper))
 autoplot(BoxCox(mcopper, lambda_mcopper))
+```
+
+```{r}
 # - enplanements
 lambda_enplanements <- BoxCox.lambda(enplanements)
 print(c("Good value of lambda for enplanements: ", 
       lambda_enplanements))
 autoplot(BoxCox(enplanements, lambda_enplanements))
 ```
-
 
 2. Why is a Box-Cox transformation unhelpful for the cangas data?
 
@@ -72,10 +80,16 @@ autoplot(dole)
 lambda_dole <- BoxCox.lambda(dole)
 autoplot(BoxCox(dole, lambda_dole))
 # For dole data, it looked like using Box-Cox Transformation would be better to see the pattern
+```
+
+```{r}
 autoplot(usdeaths)
 lambda_usdeaths <- BoxCox.lambda(usdeaths)
 autoplot(BoxCox(usdeaths, lambda_usdeaths))
 # For usdeaths data, it looked like it is meaningless to transform it
+```
+
+```{r}
 autoplot(bricksq)
 lambda_bricksq <- BoxCox.lambda(bricksq)
 autoplot(BoxCox(bricksq, lambda_bricksq))
@@ -107,6 +121,9 @@ autoplot(naive_www)
 checkresiduals(naive_www)
 # The ACF plot indicates that the residuals aren't white noise because of existence of significant spikes. And Ljung-Box test shows that they are statistically significant for both of methods. Therefore they aren't white noise. And the distribution of residuals isn't normal, too.
 # If I need to choose between above 2 methods, I will choose naive method because there isn't any particular seasonal pattern in the data and the Q values of Ljung-Box test were same for both methods.
+```
+
+```{r}
 snaive_bricksq <- snaive(bricksq)
 autoplot(snaive_bricksq)
 checkresiduals(snaive_bricksq)
@@ -143,17 +160,31 @@ answer
 # a. Split the data into two parts using
 myts.train <- window(myts, end=c(2010,12))
 myts.test <- window(myts, start=2011)
+```
+
+```{r}
 # b. Check that your data have been split appropriately by producing the following plot.
 autoplot(myts) + 
   autolayer(myts.train, series="Training") +
   autolayer(myts.test, series="Test")
+```
+
+```{r}
 # c. Calculate forecasts using snaive applied to myts.train.
 snaive_myts_train <- snaive(myts.train)
+```
+
+```{r}
 # d. Compare the accuracy of your forecasts against the actual values stored in myts.test.
 accuracy(snaive_myts_train, myts.test)
- 
+```
+
+```{r}
 # e. Check the residuals. Do the residuals appear to be uncorrelated and normally distributed?
 checkresiduals(snaive_myts_train)
+```
+
+```{r}
 # residuals were correlated with each other and not normally distributed
 # f. How sensitive are the accuracy measures to the training/test split?
 # I thought of sensitivity as the ratio of the test set error to the train set error. When I used the definition, it looked like Mean Error is highly sensitive, RMSE, MAE, MPE, MASE are sensitive and MAPE and ACF1 aren't much sensitive.
@@ -163,16 +194,25 @@ checkresiduals(snaive_myts_train)
 9. visnights contains quarterly visitor nights (in millions) from 1998 to 2016 for twenty regions of Australia.
 
 ```{r}
-# Use window() to create three training sets for visnights[,"QLDMetro"], omitting the last 1, 2 and 3 years; call these train1, train2, and train3, respectively. For example train1 <- window(visnights[, "QLDMetro"], end = c(2015, 4))
+# a. Use window() to create three training sets for visnights[,"QLDMetro"], omitting the last 1, 2 and 3 years; call these train1, train2, and train3, respectively. For example train1 <- window(visnights[, "QLDMetro"], end = c(2015, 4))
+```
+
+```{r}
 temp = visnights[, "QLDMetro"]
 train1 <- window(temp, end = c(2015, 4))
 train2 <- window(temp, end = c(2014, 4))
 train3 <- window(temp, end = c(2013, 4))
 # b. Compute one year of forecasts for each training set using the snaive() method. Call these fc1, fc2 and fc3, respectively
+```
+
+```{r}
 fc1 <- snaive(train1, h = 4)
 fc2 <- snaive(train2, h = 4)
 fc3 <- snaive(train3, h = 4)
 # c. Use accuracy() to compare the MAPE over the three test sets. Comment on these.
+```
+
+```{r}
 test1 <- window(temp, start = c(2016, 1), end = c(2016, 4))
 test2 <- window(temp, start = c(2015, 1), end = c(2015, 4))
 test3 <- window(temp, start = c(2014, 1), end = c(2014, 4))
@@ -190,9 +230,15 @@ accuracy(fc3, test3)
 ```{r}
 # a. Produce a time plot of the series.
 autoplot(dowjones)
+```
+
+```{r}
 # b. Produce forecasts using the drift method and plot them.
 drift_dj <- rwf(dowjones, drift = TRUE)
 autoplot(drift_dj)
+```
+
+```{r}
 # c. Show that the forecasts are identical to extending the line drawn between the first and last observations.
 dj_x <- c(1, 78)
 dj_y <- c(dowjones[1], dowjones[78])
@@ -206,6 +252,9 @@ autoplot(drift_dj) +
   geom_line(aes(x = c(1, 78),
                 y = dowjones[c(1, 78)]), 
             colour = "red")
+```
+
+```{r}
 # d. Try using some of the other benchmark functions to forecast the same data set. Which do you think is best? Why?
 checkresiduals(drift_dj)
 mean_dj <- meanf(dowjones)
@@ -218,15 +267,20 @@ autoplot(snaive_dj)
 # I think that naive method is best because it is really difficult to predict stock price with past observations.  I think that it is safer to just take the value of last observation using naive method
 ```
 
-
 11. Consider the daily closing IBM stock prices (data set ibmclose).
 
-```{r message=FALSE, warning=FALSE}
+```{r}
 # a. Produce some plots of the data in order to become familiar with it.
 autoplot(ibmclose)
+```
+
+```{r}
 # b. Split the data into a training set of 300 observations and a test set of 69 observations.
 ibm_train <- subset(ibmclose, end = 300)
 ibm_test <- subset(ibmclose, start = 301)
+```
+
+```{r message=FALSE, warning=FALSE}
 # c. Try using various benchmark methods to forecast the training set and compare the results on the test set. Which method did best?
 snaive_ibm <- snaive(ibm_train, h = 69)
 naive_ibm <- naive(ibm_train, h = 69)
@@ -276,22 +330,29 @@ autoplot(subset(e_snaive_ibm_CV^2, start = 301), series = "snaive method") +
         plot.subtitle = element_text(hjust = 0.5)) +
   ylab(expression(paste("erro", r^{2})))
 # Based on the returned results of tsCV function, I would've selected naive method because it yielded smallest error.
-  
+```
+
+```{r}
 # d. Check the residuals of your preferred method. Do they resemble white noise?
 checkresiduals(naive_ibm)
 checkresiduals(drift_ibm)
 # No. Even when I checked the residuals of naive method because the error values were similar to result of the drift method, they weren't like white noise, too.
 ```
 
-
 12. Consider the sales of new one-family houses in the USA, Jan 1973 - Nov 1995 (data set hsales).
 
 ```{r warning=FALSE}
 # a. Produce some plots of the data in order to become familiar with it.
 autoplot(hsales) # we call autoplot
+```
+
+```{r}
 # b. Split the hsales data set into a training set and a test set, where the test set is the last two years of data.
 hsales_train <- subset(hsales, end = length(hsales) - 24)
 hsales_test <- subset(hsales, start = length(hsales) - 23) # from the end - 23 months
+```
+
+```{r}
 # c. Try using various benchmark methods to forecast the training set and compare the results on the test set.  Which method did best?
 snaive_hsales <- snaive(hsales_train, h = 24)
 naive_hsales <- naive(hsales_train, h = 24)
@@ -314,6 +375,9 @@ accuracy(drift_hsales, hsales_test)
 writeLines("\nMean method")
 accuracy(mean_hsales, hsales_test)
 # Seasonal naive method did the best.
+```
+
+```{r}
 # d. Check the residuals of your preferred method. Do they resemble white noise?
 checkresiduals(snaive_hsales) 
 # But the residuals don't resemble white noise
