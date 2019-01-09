@@ -1,0 +1,667 @@
+---
+title: "Time series I: EDA"
+author: Radu Ioan-Alexandru (Gr 405) Stefan Eva (Gr 405)
+date: "\t `r format(Sys.time(), '%d %B %Y')`"
+output: slidy_presentation
+---
+
+```{r echo=FALSE, message=FALSE, warning=FALSE}
+library(forecast)
+library(fpp2)
+```
+
+## Chapter 2. Ex. 1
+
+1. Use the help menu to explore what the series gold, woolyrnq and gas represent. These are available in the forecast package.
+
+```{r}
+# See the structures of datas
+str(gold)
+str(woolyrnq)
+str(gas)
+```
+
+```{r}
+# a. Use autoplot to plot each of these in separate plots.
+autoplot(gold)
+autoplot(woolyrnq)
+autoplot(gas)
+writeLines("")
+```
+
+```{r}
+# b. What is the frequency of each commodity series? Hint: apply the frequency() function.
+print("Frequency")
+print("gold")
+frequency(gold)
+print("woolyrnq")
+frequency(woolyrnq)
+print("gas")
+frequency(gas)
+writeLines("")
+```
+
+```{r}
+# c. Use which.max() to spot the outlier in the gold series. Which observation was it?
+print("When gold got maximum value?")
+which.max(gold)
+print("What was the gold's maximum value?")
+gold[which.max(gold)]
+```
+
+## Ex. 2
+
+2. Download the file tute1.csv from OTexts.org/fpp2/extrafiles/tute1.csv, open it in Excel (or some other spreadsheet application), and review its contents. You should find four columns of information. Columns B through D each contain a quarterly series, labelled Sales, AdBudget and GDP. Sales contains the quarterly sales for a small company over the period 1981-2005. AdBudget is the advertising budget and GDP is the gross domestic product. All series have been adjusted for inflation.
+
+```{r}
+# a. You can read the data into R with the following script:
+tute1 <- read.csv("tute1.csv", header=TRUE)
+View(tute1)
+```
+
+```{r}
+# b. Convert the data to time series
+mytimeseries <- ts(tute1[,-1], start=1981, frequency=4)
+# (The [,-1] removes the first column which contains the quarters as we don't need them now.)
+```
+
+```{r}
+# c. Construct time series plots of each of the three series
+ autoplot(mytimeseries, facets=TRUE)
+# Check what happens when you don't include facets=TRUE.
+autoplot(mytimeseries)
+```
+
+## Ex. 3
+
+3. Download some monthly Australian retail data from the book website. These represent retail sales in various categories for different Australian states, and are stored in a MS-Excel file.
+
+```{r}
+# a. You can read the data into R with the following script:
+retaildata <- readxl::read_excel("retail.xlsx", skip=1)
+View(retaildata)
+# The second argument (skip=1) is required because the Excel sheet has two header rows.
+```
+
+```{r}
+# b. Select one of the time series as follows (but replace the column name with your own chosen column):
+View(retaildata)
+myts <- ts(retaildata[,"A3349873A"], frequency=12, start=c(1982,4))
+View(retaildata)
+```
+
+```{r}
+# c. Explore your chosen retail time series using the following functions: autoplot, ggseasonplot, ggsubseriesplot, gglagplot, ggAcf
+#Can you spot any seasonality, cyclicity and trend? What do you learn about the series?
+autoplot(myts)
+ggseasonplot(myts)
+ggsubseriesplot(myts)
+gglagplot(myts, lags = 12)
+ggAcf(myts)
+# Seasonality and trend of the data can be seen
+```
+
+## Ex. 4
+
+4. Create time plots of the following times series: bicoal, chicken, dole, usdeaths, lynx, goog, writing, fancy, a10, h02.
+
+```{r}
+# - Use help() to find out about the data in each series.
+help(bicoal)
+help(chicken)
+help(dole)
+help(usdeaths)
+help(lynx)
+help(goog)
+help(writing)
+help(fancy)
+help(a10)
+help(h02)
+```
+
+```{r}
+autoplot(bicoal)
+autoplot(chicken)
+autoplot(dole)
+autoplot(usdeaths)
+autoplot(lynx)
+autoplot(goog)
+autoplot(writing)
+autoplot(fancy)
+autoplot(a10)
+autoplot(h02)
+# - For the goog plot, modify the axis labels and title.
+autoplot(goog) +
+  ggtitle("Daily closing stock prices of Google Inc.") +
+  xlab("Time") +
+  ylab("Price(Unit: US$)")
+```
+
+## Ex. 5
+
+5. Use the ggseasonplot() and ggsubseriesplot() functions to explore the seasonal patterns in the following time series: writing, fancy, a10, h02.
+
+```{r}
+# - What can you say about the seasonal patterns?
+# - Can you identify any unusual years?
+ggseasonplot(writing)
+ggsubseriesplot(writing)
+# The sales amount of paper falls down in August annually
+ggseasonplot(fancy)
+ggsubseriesplot(fancy)
+# In December, 1992 the monthly sales for a souvenir shop increased dramatically compared to the same month of the last year
+ggseasonplot(a10)
+ggsubseriesplot(a10)
+# The amount of antidiabetes monthly scripts falls down in February annually
+ggseasonplot(h02)
+ggsubseriesplot(h02)
+# The amount of corticosteroid monthly scripts also falls down in February annually
+```
+
+## Ex. 6
+
+6. Use the the following graphics functions: autoplot, ggseasonplot, ggsubseriesplot, gglagplot, ggAcf and explore features from the following time series: hsales, usdeaths, bricksq, sunspotarea, gasoline.
+
+```{r}
+# - Can you spot any seasonality, cyclicity and trend?
+# - What do you learn about the series?
+autoplot(hsales)
+ggseasonplot(hsales)
+ggsubseriesplot(hsales)
+gglagplot(hsales)
+ggAcf(hsales, lag.max = 400)
+# can spot seasonality and cyclicity. The cycle period is about 4 years(100 months)
+```
+
+```{r}
+autoplot(usdeaths)
+ggseasonplot(usdeaths)
+ggsubseriesplot(usdeaths)
+gglagplot(usdeaths)
+ggAcf(usdeaths, lag.max = 60)
+# can spot seasonality
+```
+
+```{r}
+autoplot(bricksq)
+ggseasonplot(bricksq)
+ggsubseriesplot(bricksq)
+gglagplot(bricksq)
+ggAcf(bricksq, lag.max = 200)
+# can spot little seasonality and strong trend
+```
+
+```{r}
+autoplot(sunspotarea)
+# ggseasonplot(sunspotarea) 
+# not seasonal, can't draw it
+# ggsubseriesplot(sunspotarea)
+# not seasonal, useless to draw it
+gglagplot(sunspotarea)
+ggAcf(sunspotarea, lag.max = 50)
+# can spot strong cyclicity
+```
+
+```{r}
+autoplot(gasoline)
+ggseasonplot(gasoline)
+# ggsubseriesplot(gasoline)
+# The number of weeks is 52 and it looked like it is too much for subseriesplot
+gglagplot(gasoline)
+ggAcf(gasoline, lag.max = 1000)
+# can spot seasonality and trend
+```
+
+## Ex. 7
+
+7. The arrivals data set comprises quarterly international arrivals (in thousands) to Australia from Japan, New Zealand, UK and the US.
+ 
+```{r}
+# See the structure of arrivals
+str(arrivals)
+# - Use autoplot, ggseasonplot and ggsubseriesplot to compare the differences between the arrivals from these four countries.
+# - Can you identify any unusual observations?
+```
+
+```{r}
+autoplot(arrivals)
+ggseasonplot(arrivals[, "Japan"])
+ggseasonplot(arrivals[, "NZ"])
+ggseasonplot(arrivals[, "UK"])
+ggseasonplot(arrivals[, "US"])
+ggsubseriesplot(arrivals[, "Japan"])
+ggsubseriesplot(arrivals[, "NZ"])
+ggsubseriesplot(arrivals[, "UK"])
+ggsubseriesplot(arrivals[, "US"])
+# The arrivals from Japan decrease in the 2nd quarter.
+# The arrivals from New Zealand are highest in the 3rd quarter and lowest in the 1st quarter.
+# The arrivals from UK are fewer in the 2nd quarter and increasing in the third quarter.
+# The arrivals from US are fewer in the 2nd quarter and like the ones from UK, they are increasing in the 3rd quarter.
+```
+
+## Ex. 9
+
+9. The pigs data shows the monthly total number of pigs slaughtered in Victoria, Australia, from Jan 1980 to Aug 1995. Use mypigs <- window(pigs, start=1990) to select the data starting from 1990. Use autoplot and ggAcf for mypigs series and compare these to white noise plots from Figures 2.15 and 2.16. (Subchapter 9)
+ 
+```{r}
+mypigs <- window(pigs, start=1990)
+#str(mypigs)
+autoplot(mypigs)
+ggAcf(mypigs)
+# We can see that the autocorrelation values were outside of bounds, so there isn't probably white noise present.
+``` 
+
+## Ex. 10
+
+10. dj contains 292 consecutive trading days of the Dow Jones Index. Use ddj <- diff(dj) to compute the daily changes in the index. Plot ddj and its ACF. Do the changes in the Dow Jones Index look like white noise?
+
+```{r}
+ddj <- diff(dj)
+#str(ddj)
+autoplot(ddj)
+ggAcf(ddj)
+# Only a small part of the autocorrelation values were outside bounds, so there probably can be white noise.
+```
+
+## Chapter 3. Ex. 1
+
+1. For the following series, find an appropriate Box-Cox transformation in order to stabilize the variance.
+
+```{r}
+# - usnetelec
+lUsnetelec <- BoxCox.lambda(usnetelec)
+print(c("Good value of lambda for usnetelec: ", 
+        lUsnetelec))
+autoplot(BoxCox(usnetelec, lUsnetelec))
+```
+
+```{r}
+# - usgdp
+lUsgdp <- BoxCox.lambda(usgdp)
+print(c("Good value of lambda for usgdp: ", 
+      lUsgdp))
+autoplot(BoxCox(usgdp, lUsgdp))
+```
+
+```{r}
+# - mcopper
+lMcopper <- BoxCox.lambda(mcopper)
+print(c("Good value of lambda for mcopper: ", 
+      lMcopper))
+autoplot(BoxCox(mcopper, lMcopper))
+```
+
+```{r}
+# - enplanements
+lEnplanements <- BoxCox.lambda(enplanements)
+print(c("Good value of lambda for enplanements: ", 
+      lEnplanements))
+autoplot(BoxCox(enplanements, lEnplanements))
+```
+
+## Ex. 2
+
+2. Why is a Box-Cox transformation unhelpful for the cangas data?
+
+```{r}
+autoplot(cangas)
+lCangas <- BoxCox.lambda(cangas)
+autoplot(BoxCox(cangas, lCangas))
+# You can see that the Box-Cox transformation doesn't yield simpler model
+```
+
+## Ex. 3
+
+3. What Box-Cox transformation would you select for your retail data (from Exercise 3 in Section 2.10)?
+
+```{r}
+retaildata <- xlsx::read.xlsx("retail.xlsx", sheetIndex = 1, startRow = 2)
+myts <- ts(retaildata[,"A3349873A"], frequency=12, start=c(1982,4))
+lRetail <- BoxCox.lambda(myts)
+print(c("selected lambda:", lRetail))
+fc_retail <- rwf(myts, 
+                 drift = TRUE, 
+                 lambda = lRetail,
+                 h = 50,
+                 level = 80)
+fc_retail_biasadj <- rwf(myts, 
+                         drift = TRUE, 
+                         lambda = lRetail,
+                         h = 50,
+                         level = 80,
+                         biasadj = TRUE)
+autoplot(myts) +
+  autolayer(fc_retail, series = "Drift method with Box-Cox Transformation") +
+  autolayer(fc_retail_biasadj$mean, series = "Bias Adjusted") +
+  guides(colour = guide_legend(title = "Forecast"))
+# It is better to choose a bias adjusted Box-Cox Transformation with lambda = 0.128
+```
+
+## Ex. 4
+
+4. For each of the following series, make a graph of the data. If transforming seems appropriate, do so and describe the effect. dole, usdeaths, bricksq.
+
+```{r}
+autoplot(dole)
+lDole <- BoxCox.lambda(dole)
+autoplot(BoxCox(dole, lDole))
+# For dole data, it looks like using Box-Cox Transformation is better to see the pattern.
+```
+
+```{r}
+autoplot(usdeaths)
+lUsdeaths <- BoxCox.lambda(usdeaths)
+autoplot(BoxCox(usdeaths, lUsdeaths))
+# For usdeaths data, it looks like it is meaningless to transform it.
+```
+
+```{r}
+autoplot(bricksq)
+lBricksq <- BoxCox.lambda(bricksq)
+autoplot(BoxCox(bricksq, lBricksq))
+# For bricksq data, it looks like it is meaningless to transform it
+```
+
+## Ex. 5
+
+5. Calculate the residuals from a seasonal naïve forecast applied to the quarterly Australian beer production data from 1992. Test if the residuals are white noise and normally distributed. What do you conclude?
+
+```{r}
+beer <- window(ausbeer, start = 1992)
+fc <- snaive(beer)
+autoplot(fc)
+res <- residuals(fc)
+autoplot(res)
+checkresiduals(fc)
+# The ACF plot result indicates that the residuals aren't white noise because of significant spike at lag 4.
+# Ljung-Box test shows that it is statistically significant. 
+# Therefore they aren't white noise and they aren't normally distributed.
+```
+
+## Ex. 6
+
+6. Repeat the exercise for the WWWusage and bricksq data. Use whichever of naive or snaive is more appropriate in each case.
+
+```{r}
+snaiveWww <- snaive(WWWusage, h = 15)
+autoplot(snaiveWww)
+checkresiduals(snaiveWww)
+naiveWww <- naive(WWWusage)
+autoplot(naiveWww)
+checkresiduals(naiveWww)
+# The ACF plot indicates that the residuals aren't white noise because of existence of significant spikes. 
+# Ljung-Box test shows that they are statistically significant for both of methods. 
+# Therefore they aren't white noise. And the distribution of residuals isn't normal, too.
+# We will choose the naive method because there isn't any particular seasonal pattern in the data and the Q values of Ljung-Box test were same for both methods.
+```
+
+```{r}
+snaiveBricksq <- snaive(bricksq)
+autoplot(snaiveBricksq)
+checkresiduals(snaiveBricksq)
+naiveBricksq <- naive(bricksq)
+autoplot(naiveBricksq)
+checkresiduals(naiveBricksq)
+# For both of methods, Ljung-Box test results show that the residuals aren't white noise. And the residuals didn't have normal distribution, too.
+# We will choose snaive method because we can see the seasonality in the data and the Q value of Ljung-Box of snaive methods was less than the value of naive method.
+```
+
+## Ex. 7
+
+7. Are the following statements true or false? Explain your answer.
+
+ a. Good forecast methods should have normally distributed residuals.
+ b. A model with small residuals will give good forecasts.
+ c. The best measure of forecast accuracy is MAPE.
+ d. If your model doesn't forecast well, you should make it more complicated.
+ e. Always choose the model with the best forecast accuracy as measured on the test set.
+
+answer 
+
+ - a. It isn't necessary for good forecast methods to have normally distributed residuals, but it is useful to have them.
+
+ - b. Good forecast methods don't need to have small residuals. But their residuals should be uncorrelated and have zero mean.
+ 
+ - c. The best measure of forecast accuracy is different on a case by case basis.
+ 
+ - d. More complicated forecast method doesn't guarantee better forecast.
+ 
+ - e. When choosing a model, whether the residuals have zero mean and whether they are uncorrelated with each other should also be considered. Simply choosing best accuracy model isn't good.
+
+## Ex. 8
+
+8. For your retail time series (from Exercise 3 in Section 2.10):
+
+```{r}
+# a. Split the data into two parts using
+myts.train <- window(myts, end=c(2010,12))
+myts.test <- window(myts, start=2011)
+```
+
+```{r}
+# b. Check that your data have been split appropriately by producing the following plot.
+autoplot(myts) + 
+  autolayer(myts.train, series="Training") +
+  autolayer(myts.test, series="Test")
+```
+
+```{r}
+# c. Calculate forecasts using snaive applied to myts.train.
+snaive_myts_train <- snaive(myts.train)
+```
+
+```{r}
+# d. Compare the accuracy of your forecasts against the actual values stored in myts.test.
+accuracy(snaive_myts_train, myts.test)
+```
+
+```{r}
+# e. Check the residuals. Do the residuals appear to be uncorrelated and normally distributed?
+checkresiduals(snaive_myts_train)
+# residuals were correlated with each other and not normally distributed
+```
+
+```{r}
+# f. How sensitive are the accuracy measures to the training/test split?
+# I thought of sensitivity as the ratio of the test set error to the train set error. When I used the definition, it looked like Mean Error is highly sensitive, RMSE, MAE, MPE, MASE are sensitive and MAPE and ACF1 aren't much sensitive.
+# I don't know whether this method is what the author wanted to solve this question about sensitivity.
+```
+
+## Ex. 9
+
+9. visnights contains quarterly visitor nights (in millions) from 1998 to 2016 for twenty regions of Australia.
+
+```{r}
+# a. Use window() to create three training sets for visnights[,"QLDMetro"], omitting the last 1, 2 and 3 years; call these train1, train2, and train3, respectively. For example train1 <- window(visnights[, "QLDMetro"], end = c(2015, 4))
+
+temp = visnights[, "QLDMetro"]
+train1 <- window(temp, end = c(2015, 4))
+train2 <- window(temp, end = c(2014, 4))
+train3 <- window(temp, end = c(2013, 4))
+```
+
+```{r}
+# b. Compute one year of forecasts for each training set using the snaive() method. Call these fc1, fc2 and fc3, respectively
+
+fc1 <- snaive(train1, h = 4)
+fc2 <- snaive(train2, h = 4)
+fc3 <- snaive(train3, h = 4)
+```
+
+```{r}
+# c. Use accuracy() to compare the MAPE over the three test sets. Comment on these.
+
+test1 <- window(temp, start = c(2016, 1), end = c(2016, 4))
+test2 <- window(temp, start = c(2015, 1), end = c(2015, 4))
+test3 <- window(temp, start = c(2014, 1), end = c(2014, 4))
+accuracy(fc1, test1)
+writeLines("")
+accuracy(fc2, test2)
+writeLines("")
+accuracy(fc3, test3)
+# MAPE was smallest for 2015 prediction and biggest for 2014 prediction. MAPE became smaller in 2016 prediction, but it wan't smaller than the one for 2015.
+```
+
+## Ex. 10
+
+10. Use the Dow Jones index (data set dowjones) to do the following:
+
+```{r}
+# a. Produce a time plot of the series.
+autoplot(dowjones)
+```
+
+```{r}
+# b. Produce forecasts using the drift method and plot them.
+driftDj <- rwf(dowjones, drift = TRUE)
+autoplot(driftDj)
+```
+
+```{r}
+# c. Show that the forecasts are identical to extending the line drawn between the first and last observations.
+dj_x <- c(1, 78)
+dj_y <- c(dowjones[1], dowjones[78])
+lm_dj <- lm(dj_y ~ dj_x)
+
+autoplot(driftDj) +
+  geom_abline(intercept = lm_dj$coefficients[1],
+              slope = lm_dj$coefficients[2],
+              colour = "red")
+autoplot(driftDj) +
+  geom_line(aes(x = c(1, 78),
+                y = dowjones[c(1, 78)]), 
+            colour = "red")
+```
+
+```{r}
+# d. Try using some of the other benchmark functions to forecast the same data set. Which do you think is best? Why?
+checkresiduals(driftDj)
+meanDj <- meanf(dowjones)
+autoplot(meanDj)
+naiveDj <- naive(dowjones)
+autoplot(naiveDj)
+checkresiduals(naiveDj)
+snaiveDj <- snaive(dowjones, h = 10)
+autoplot(snaiveDj)
+# I think that naive method is best because it is really difficult to predict stock price with past observations.  I think that it is safer to just take the value of last observation using naive method
+```
+
+## Ex. 11
+
+11. Consider the daily closing IBM stock prices (data set ibmclose).
+
+```{r}
+# a. Produce some plots of the data in order to become familiar with it.
+autoplot(ibmclose)
+```
+
+```{r}
+# b. Split the data into a training set of 300 observations and a test set of 69 observations.
+ibm_train <- subset(ibmclose, end = 300)
+ibm_test <- subset(ibmclose, start = 301)
+```
+
+```{r message=FALSE, warning=FALSE}
+# c. Try using various benchmark methods to forecast the training set and compare the results on the test set. Which method did best?
+snaive_ibm <- snaive(ibm_train, h = 69)
+naive_ibm <- naive(ibm_train, h = 69)
+drift_ibm <- rwf(ibm_train, drift = TRUE, h = 69)
+mean_ibm <- meanf(ibm_train, h = 69)
+autoplot(snaive_ibm) +
+  autolayer(ibm_test)
+autoplot(naive_ibm) +
+  autolayer(ibm_test)
+autoplot(drift_ibm) +
+  autolayer(ibm_test)
+autoplot(mean_ibm) +
+  autolayer(ibm_test)
+writeLines("Snaive method")
+accuracy(snaive_ibm, ibm_test)
+writeLines("\nNaive method")
+accuracy(naive_ibm, ibm_test)
+writeLines("\nDrift method")
+accuracy(drift_ibm, ibm_test)
+writeLines("\nMean method")
+accuracy(mean_ibm, ibm_test)
+e_snaive_ibm <- ibm_test - snaive_ibm$mean
+e_naive_ibm <- ibm_test - naive_ibm$mean
+e_drift_ibm <- ibm_test - drift_ibm$mean
+e_mean_ibm <- ibm_test - mean_ibm$mean
+autoplot(e_snaive_ibm^2, series = "snaive method") +
+  autolayer(e_naive_ibm^2, series = "naive method") +
+  autolayer(e_drift_ibm^2, series = "drift method") +
+  autolayer(e_mean_ibm^2, series = "mean method") +
+  guides(colour = guide_legend(title = "Forecast")) +
+  ggtitle("Errors of the forecast of closing IBM stock price") +
+  ylab(expression(paste("erro", r^{2})))
+# Drift method did best
+# Time series cross-validation method of tsCV function don't use full data unless h = 1. For example, if usable data has 100 points and h = 3, tsCV predicts 101st point with 98 points, 102nd with 99 points and 103rd with 100 points. Therefore error result value of tsCV cannot help differing from the values of accuracy function. Accuracy function always get result from full data.
+ibmclose %>% tsCV(forecastfunction = snaive, h = 69) ->  e_snaive_ibm_CV
+ibmclose %>% tsCV(forecastfunction = naive, h = 69) ->  e_naive_ibm_CV
+ibmclose %>% tsCV(forecastfunction = rwf, drift = TRUE, h = 69) ->  e_drift_ibm_CV
+ibmclose %>% tsCV(forecastfunction = meanf, h = 69) ->  e_mean_ibm_CV
+autoplot(subset(e_snaive_ibm_CV^2, start = 301), series = "snaive method") +
+  autolayer(subset(e_naive_ibm_CV^2, start = 301), series = "naive method") +
+  autolayer(subset(e_drift_ibm_CV^2, start = 301), series = "drift method") +
+  autolayer(subset(e_mean_ibm_CV^2, start = 301), series = "mean method") +
+  guides(colour = guide_legend(title = "Forecast")) +
+  ggtitle("Errors of the forecast of closing IBM stock price",
+          subtitle = "after using tsCV function") +
+  theme(plot.title = element_text(hjust = 0.5),
+        plot.subtitle = element_text(hjust = 0.5)) +
+  ylab(expression(paste("erro", r^{2})))
+# Based on the returned results of tsCV function, I would've selected naive method because it yielded smallest error.
+```
+
+```{r}
+# d. Check the residuals of your preferred method. Do they resemble white noise?
+checkresiduals(naive_ibm)
+checkresiduals(drift_ibm)
+# No. Even when I checked the residuals of naive method because the error values were similar to result of the drift method, they weren't like white noise, too.
+```
+
+## Ex. 12
+
+12. Consider the sales of new one-family houses in the USA, Jan 1973 - Nov 1995 (data set hsales).
+
+```{r warning=FALSE}
+# a. Produce some plots of the data in order to become familiar with it.
+autoplot(hsales) # we call autoplot
+```
+
+```{r}
+# b. Split the hsales data set into a training set and a test set, where the test set is the last two years of data.
+hsalesTrain <- subset(hsales, end = length(hsales) - 24)
+hsalesTest <- subset(hsales, start = length(hsales) - 23) # from the end - 23 months
+```
+
+```{r}
+# c. Try using various benchmark methods to forecast the training set and compare the results on the test set.  Which method did best?
+snaive_hsales <- snaive(hsalesTrain, h = 24)
+naive_hsales <- naive(hsalesTrain, h = 24)
+drift_hsales <- rwf(hsalesTrain, drift = TRUE, h = 24)
+mean_hsales <- meanf(hsalesTrain, h = 24)
+autoplot(snaive_hsales) +
+  autolayer(hsalesTest)
+autoplot(naive_hsales) +
+  autolayer(hsalesTest)
+autoplot(drift_hsales) +
+  autolayer(hsalesTest)
+autoplot(mean_hsales) +
+  autolayer(hsalesTest)
+writeLines("Snaive method")
+accuracy(snaive_hsales, hsalesTest)
+writeLines("\nNaive method")
+accuracy(naive_hsales, hsalesTest)
+writeLines("\nDrift method")
+accuracy(drift_hsales, hsalesTest)
+writeLines("\nMean method")
+accuracy(mean_hsales, hsalesTest)
+# Seasonal naive method did the best.
+```
+
+```{r}
+# d. Check the residuals of your preferred method. Do they resemble white noise?
+checkresiduals(snaive_hsales) 
+# The residuals don't resemble white noise
+```
