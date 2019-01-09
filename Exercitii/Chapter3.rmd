@@ -1,68 +1,79 @@
-# Chapter 3
+---
+title: "Time series I: EDA"
+author: Radu Ioan-Alexandru (Gr 405) Stefan Eva (Gr 405)
+date: "\t `r format(Sys.time(), '%d %B %Y')`"
+output: slidy_presentation
+---
 
-```{r echo=FALSE}
+```{r echo=FALSE, message=FALSE, warning=FALSE}
 library(forecast)
 library(fpp2)
 ```
+
+## Ex. 1
 
 1. For the following series, find an appropriate Box-Cox transformation in order to stabilize the variance.
 
 ```{r}
 # - usnetelec
-lambda_usnetelec <- BoxCox.lambda(usnetelec)
+lUsnetelec <- BoxCox.lambda(usnetelec)
 print(c("Good value of lambda for usnetelec: ", 
-        lambda_usnetelec))
-autoplot(BoxCox(usnetelec, lambda_usnetelec))
+        lUsnetelec))
+autoplot(BoxCox(usnetelec, lUsnetelec))
 ```
 
 ```{r}
 # - usgdp
-lambda_usgdp <- BoxCox.lambda(usgdp)
+lUsgdp <- BoxCox.lambda(usgdp)
 print(c("Good value of lambda for usgdp: ", 
-      lambda_usgdp))
-autoplot(BoxCox(usgdp, lambda_usgdp))
+      lUsgdp))
+autoplot(BoxCox(usgdp, lUsgdp))
 ```
 
 ```{r}
 # - mcopper
-lambda_mcopper <- BoxCox.lambda(mcopper)
+lMcopper <- BoxCox.lambda(mcopper)
 print(c("Good value of lambda for mcopper: ", 
-      lambda_mcopper))
-autoplot(BoxCox(mcopper, lambda_mcopper))
+      lMcopper))
+autoplot(BoxCox(mcopper, lMcopper))
 ```
 
 ```{r}
 # - enplanements
-lambda_enplanements <- BoxCox.lambda(enplanements)
+lEnplanements <- BoxCox.lambda(enplanements)
 print(c("Good value of lambda for enplanements: ", 
-      lambda_enplanements))
-autoplot(BoxCox(enplanements, lambda_enplanements))
+      lEnplanements))
+autoplot(BoxCox(enplanements, lEnplanements))
 ```
+
+## Ex. 2
 
 2. Why is a Box-Cox transformation unhelpful for the cangas data?
 
 ```{r}
 autoplot(cangas)
-lambda_cangas <- BoxCox.lambda(cangas)
-autoplot(BoxCox(cangas, lambda_cangas))
+lCangas <- BoxCox.lambda(cangas)
+autoplot(BoxCox(cangas, lCangas))
 # You can see that the Box-Cox transformation doesn't yield simpler model
 ```
+
+## Ex. 3
 
 3. What Box-Cox transformation would you select for your retail data (from Exercise 3 in Section 2.10)?
 
 ```{r}
 retaildata <- xlsx::read.xlsx("retail.xlsx", sheetIndex = 1, startRow = 2)
 myts <- ts(retaildata[,"A3349873A"], frequency=12, start=c(1982,4))
-lambda_retail <- BoxCox.lambda(myts)
-print(c("selected lambda:", lambda_retail))
+lRetail <- BoxCox.lambda(myts)
+print(c("selected lambda:", lRetail))
 fc_retail <- rwf(myts, 
                  drift = TRUE, 
-                 lambda = lambda_retail,
+                 lambda = lRetail,
                  h = 50,
                  level = 80)
 fc_retail_biasadj <- rwf(myts, 
                          drift = TRUE, 
-                         lambda = lambda_retail,
+                         lambda = lRetail,
                          h = 50,
                          level = 80,
                          biasadj = TRUE)
@@ -73,33 +84,37 @@ autoplot(myts) +
 # It is better to choose a bias adjusted Box-Cox Transformation with lambda = 0.128
 ```
 
+## Ex. 4
+
 4. For each of the following series, make a graph of the data. If transforming seems appropriate, do so and describe the effect. dole, usdeaths, bricksq.
 
 ```{r}
 autoplot(dole)
-lambda_dole <- BoxCox.lambda(dole)
-autoplot(BoxCox(dole, lambda_dole))
+lDole <- BoxCox.lambda(dole)
+autoplot(BoxCox(dole, lDole))
 # For dole data, it looks like using Box-Cox Transformation is better to see the pattern.
 ```
 
 ```{r}
 autoplot(usdeaths)
-lambda_usdeaths <- BoxCox.lambda(usdeaths)
-autoplot(BoxCox(usdeaths, lambda_usdeaths))
+lUsdeaths <- BoxCox.lambda(usdeaths)
+autoplot(BoxCox(usdeaths, lUsdeaths))
 # For usdeaths data, it looks like it is meaningless to transform it.
 ```
 
 ```{r}
 autoplot(bricksq)
-lambda_bricksq <- BoxCox.lambda(bricksq)
-autoplot(BoxCox(bricksq, lambda_bricksq))
+lBricksq <- BoxCox.lambda(bricksq)
+autoplot(BoxCox(bricksq, lBricksq))
 # For bricksq data, it looks like it is meaningless to transform it
 ```
+
+## Ex. 5
 
 5. Calculate the residuals from a seasonal naïve forecast applied to the quarterly Australian beer production data from 1992. Test if the residuals are white noise and normally distributed. What do you conclude?
 
 ```{r}
-beer <- window(ausbeer, start=1992)
+beer <- window(ausbeer, start = 1992)
 fc <- snaive(beer)
 autoplot(fc)
 res <- residuals(fc)
@@ -110,15 +125,17 @@ checkresiduals(fc)
 # Therefore they aren't white noise and they aren't normally distributed.
 ```
 
+## Ex. 6
+
 6. Repeat the exercise for the WWWusage and bricksq data. Use whichever of naive or snaive is more appropriate in each case.
 
 ```{r}
-snaive_www <- snaive(WWWusage, h = 15)
-autoplot(snaive_www)
-checkresiduals(snaive_www)
-naive_www <- naive(WWWusage)
-autoplot(naive_www)
-checkresiduals(naive_www)
+snaiveWww <- snaive(WWWusage, h = 15)
+autoplot(snaiveWww)
+checkresiduals(snaiveWww)
+naiveWww <- naive(WWWusage)
+autoplot(naiveWww)
+checkresiduals(naiveWww)
 # The ACF plot indicates that the residuals aren't white noise because of existence of significant spikes. 
 # Ljung-Box test shows that they are statistically significant for both of methods. 
 # Therefore they aren't white noise. And the distribution of residuals isn't normal, too.
@@ -126,15 +143,17 @@ checkresiduals(naive_www)
 ```
 
 ```{r}
-snaive_bricksq <- snaive(bricksq)
-autoplot(snaive_bricksq)
-checkresiduals(snaive_bricksq)
-naive_bricksq <- naive(bricksq)
-autoplot(naive_bricksq)
-checkresiduals(naive_bricksq)
+snaiveBricksq <- snaive(bricksq)
+autoplot(snaiveBricksq)
+checkresiduals(snaiveBricksq)
+naiveBricksq <- naive(bricksq)
+autoplot(naiveBricksq)
+checkresiduals(naiveBricksq)
 # For both of methods, Ljung-Box test results show that the residuals aren't white noise. And the residuals didn't have normal distribution, too.
 # We will choose snaive method because we can see the seasonality in the data and the Q value of Ljung-Box of snaive methods was less than the value of naive method.
 ```
+
+## Ex. 7
 
 7. Are the following statements true or false? Explain your answer.
 
@@ -146,7 +165,7 @@ checkresiduals(naive_bricksq)
 
 answer 
 
-- a. It is useful to have normally distributed residuals, but it isn't necessary for good forecast methods to have them.
+ - a. It isn't necessary for good forecast methods to have normally distributed residuals, but it is useful to have them.
 
  - b. Good forecast methods don't need to have small residuals. But their residuals should be uncorrelated and have zero mean.
  
@@ -155,6 +174,8 @@ answer
  - d. More complicated forecast method doesn't guarantee better forecast.
  
  - e. When choosing a model, whether the residuals have zero mean and whether they are uncorrelated with each other should also be considered. Simply choosing best accuracy model isn't good.
+
+## Ex. 8
 
 8. For your retail time series (from Exercise 3 in Section 2.10):
 
@@ -193,6 +214,8 @@ checkresiduals(snaive_myts_train)
 # I don't know whether this method is what the author wanted to solve this question about sensitivity.
 ```
 
+## Ex. 9
+
 9. visnights contains quarterly visitor nights (in millions) from 1998 to 2016 for twenty regions of Australia.
 
 ```{r}
@@ -213,7 +236,6 @@ fc3 <- snaive(train3, h = 4)
 ```
 
 ```{r}
-
 # c. Use accuracy() to compare the MAPE over the three test sets. Comment on these.
 
 test1 <- window(temp, start = c(2016, 1), end = c(2016, 4))
@@ -227,6 +249,8 @@ accuracy(fc3, test3)
 # MAPE was smallest for 2015 prediction and biggest for 2014 prediction. MAPE became smaller in 2016 prediction, but it wan't smaller than the one for 2015.
 ```
 
+## Ex. 10
+
 10. Use the Dow Jones index (data set dowjones) to do the following:
 
 ```{r}
@@ -236,8 +260,8 @@ autoplot(dowjones)
 
 ```{r}
 # b. Produce forecasts using the drift method and plot them.
-drift_dj <- rwf(dowjones, drift = TRUE)
-autoplot(drift_dj)
+driftDj <- rwf(dowjones, drift = TRUE)
+autoplot(driftDj)
 ```
 
 ```{r}
@@ -246,11 +270,11 @@ dj_x <- c(1, 78)
 dj_y <- c(dowjones[1], dowjones[78])
 lm_dj <- lm(dj_y ~ dj_x)
 
-autoplot(drift_dj) +
+autoplot(driftDj) +
   geom_abline(intercept = lm_dj$coefficients[1],
               slope = lm_dj$coefficients[2],
               colour = "red")
-autoplot(drift_dj) +
+autoplot(driftDj) +
   geom_line(aes(x = c(1, 78),
                 y = dowjones[c(1, 78)]), 
             colour = "red")
@@ -258,16 +282,18 @@ autoplot(drift_dj) +
 
 ```{r}
 # d. Try using some of the other benchmark functions to forecast the same data set. Which do you think is best? Why?
-checkresiduals(drift_dj)
-mean_dj <- meanf(dowjones)
-autoplot(mean_dj)
-naive_dj <- naive(dowjones)
-autoplot(naive_dj)
-checkresiduals(naive_dj)
-snaive_dj <- snaive(dowjones, h = 10)
-autoplot(snaive_dj)
+checkresiduals(driftDj)
+meanDj <- meanf(dowjones)
+autoplot(meanDj)
+naiveDj <- naive(dowjones)
+autoplot(naiveDj)
+checkresiduals(naiveDj)
+snaiveDj <- snaive(dowjones, h = 10)
+autoplot(snaiveDj)
 # I think that naive method is best because it is really difficult to predict stock price with past observations.  I think that it is safer to just take the value of last observation using naive method
 ```
+
+## Ex. 11
 
 11. Consider the daily closing IBM stock prices (data set ibmclose).
 
@@ -341,6 +367,8 @@ checkresiduals(drift_ibm)
 # No. Even when I checked the residuals of naive method because the error values were similar to result of the drift method, they weren't like white noise, too.
 ```
 
+## Ex. 12
+
 12. Consider the sales of new one-family houses in the USA, Jan 1973 - Nov 1995 (data set hsales).
 
 ```{r warning=FALSE}
@@ -350,32 +378,32 @@ autoplot(hsales) # we call autoplot
 
 ```{r}
 # b. Split the hsales data set into a training set and a test set, where the test set is the last two years of data.
-hsales_train <- subset(hsales, end = length(hsales) - 24)
-hsales_test <- subset(hsales, start = length(hsales) - 23) # from the end - 23 months
+hsalesTrain <- subset(hsales, end = length(hsales) - 24)
+hsalesTest <- subset(hsales, start = length(hsales) - 23) # from the end - 23 months
 ```
 
 ```{r}
 # c. Try using various benchmark methods to forecast the training set and compare the results on the test set.  Which method did best?
-snaive_hsales <- snaive(hsales_train, h = 24)
-naive_hsales <- naive(hsales_train, h = 24)
-drift_hsales <- rwf(hsales_train, drift = TRUE, h = 24)
-mean_hsales <- meanf(hsales_train, h = 24)
+snaive_hsales <- snaive(hsalesTrain, h = 24)
+naive_hsales <- naive(hsalesTrain, h = 24)
+drift_hsales <- rwf(hsalesTrain, drift = TRUE, h = 24)
+mean_hsales <- meanf(hsalesTrain, h = 24)
 autoplot(snaive_hsales) +
-  autolayer(hsales_test)
+  autolayer(hsalesTest)
 autoplot(naive_hsales) +
-  autolayer(hsales_test)
+  autolayer(hsalesTest)
 autoplot(drift_hsales) +
-  autolayer(hsales_test)
+  autolayer(hsalesTest)
 autoplot(mean_hsales) +
-  autolayer(hsales_test)
+  autolayer(hsalesTest)
 writeLines("Snaive method")
-accuracy(snaive_hsales, hsales_test)
+accuracy(snaive_hsales, hsalesTest)
 writeLines("\nNaive method")
-accuracy(naive_hsales, hsales_test)
+accuracy(naive_hsales, hsalesTest)
 writeLines("\nDrift method")
-accuracy(drift_hsales, hsales_test)
+accuracy(drift_hsales, hsalesTest)
 writeLines("\nMean method")
-accuracy(mean_hsales, hsales_test)
+accuracy(mean_hsales, hsalesTest)
 # Seasonal naive method did the best.
 ```
 
